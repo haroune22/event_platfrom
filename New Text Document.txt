@@ -1,0 +1,197 @@
+Backend Stack (Final Choice)
+Node.js + Express
+MySQL (pure SQL queries)
+jsonwebtoken (JWT auth)
+bcrypt (password hashing)
+(optional) multer later for images
+
+No Prisma. No ORM.
+
+🧠 How your backend will work
+
+You will manually handle:
+
+SQL queries (SELECT, INSERT, JOIN)
+relationships (foreign keys)
+data mapping in Node
+request validation
+auth middleware
+
+👉 This is real backend engineering
+
+🧱 Project Structure (clean & professional)
+backend/
+│
+├── db/
+│   └── connection.js
+│
+├── controllers/
+│   ├── authController.js
+│   ├── communityController.js
+│   ├── postController.js
+│   ├── eventController.js
+│
+├── routes/
+│   ├── authRoutes.js
+│   ├── communityRoutes.js
+│   ├── postRoutes.js
+│   ├── eventRoutes.js
+│
+├── middleware/
+│   └── authMiddleware.js
+│
+├── utils/
+│   └── jwt.js
+│
+├── config/
+│   └── db.sql (optional schema reference)
+│
+├── app.js
+└── server.js
+🧠 Database Design (MySQL – FINAL VERSION)
+
+We keep your same idea but optimized for SQL clarity:
+
+👤 users
+id (PK)
+name
+email (unique)
+password
+bio
+profilePicture
+createdAt 
+
+🌍 communities
+id (PK)
+name
+description
+createdBy (FK → users.id)
+createdAt
+
+🔗 community_members
+userId (FK)
+communityId (FK)
+joinedAt
+PRIMARY KEY (userId, communityId)
+
+📝 posts
+id (PK)
+communityId (FK)
+userId (FK)
+type ENUM('normal','learning','announcement')
+title
+content
+createdAt
+
+💬 comments
+id (PK)
+postId (FK)
+userId (FK)
+text
+createdAt
+
+📅 events
+id (PK)
+communityId (FK)
+userId (creator FK)
+title
+description
+eventDate
+maxParticipants
+createdAt
+
+👥 event_attendees
+eventId (FK)
+userId (FK)
+joinedAt
+PRIMARY KEY (eventId, userId)
+
+⭐ saved_posts
+userId (FK)
+postId (FK)
+savedAt
+PRIMARY KEY (userId, postId)
+
+🔐 Auth system (important)
+Flow:
+Register
+hash password (bcrypt)
+insert user
+Login
+check email
+compare password
+return JWT
+Middleware
+verify token
+attach req.user
+
+⚙️ Core Backend Flow (how everything connects)
+1. Communities
+create community
+join community → inserts into community_members
+2. Posts
+must belong to community
+must check user is member first
+insert post
+3. Events
+create event in community
+users join via event_attendees
+4. Comments
+linked to posts only
+🧠 Important SQL mindset (this is what you’re learning)
+
+You will use:
+
+JOIN example:
+posts + users
+communities + members
+events + attendees
+FILTERING:
+posts by community
+posts by user
+events by community
+RELATION logic:
+many-to-many tables (VERY important)
+🔥 What makes this project “strong”
+
+This backend shows:
+
+✔ Real SQL understanding (not ORM masking)
+✔ Relationship modeling
+✔ Authentication system
+✔ Access control logic
+✔ Data aggregation via JOINs
+✔ Production-style structure
+
+🚀 Your FIRST STEP (do this now)
+
+Start with ONLY this:
+
+Step 1 — Setup backend
+init Node project
+install dependencies:
+npm install express mysql2 jsonwebtoken bcrypt cors dotenv
+Step 2 — Create DB connection
+
+You’ll use mysql2:
+
+create connection pool
+export it
+Step 3 — Build AUTH first
+
+Start with:
+
+register
+login
+JWT middleware
+⚠️ Important advice (don’t skip this)
+
+Do NOT start with:
+
+posts
+communities
+events
+
+Start with:
+
+🔐 AUTH → everything depends on it
