@@ -39,7 +39,7 @@ export const CreateCommunity = async (req, res) => {
 
 export const GetCommunities = async (req, res) => {
 
-     const { category, name } = req.query;
+    const { category, name } = req.query;
 
     try {
         let query = `
