@@ -39,22 +39,37 @@ export const CreateCommunity = async (req, res) => {
 
 export const GetCommunities = async (req, res) => {
 
+     const { category, name } = req.query;
+
     try {
-        const [rows] = await db.query(
-            `SELECT c.*, u.name AS creatorName
+        let query = `
+            SELECT c.*, u.name AS creatorName
             FROM community c
             JOIN users u ON c.createdBy = u.id
-            ORDER BY c.createdAt DESC`
-        )
+            WHERE 1=1
+        `;
 
-        if (rows.length === 0) {
-            return res.status(400).json({ message: "no community found" });
+        const values = [];
+
+        if (category) {
+            query += " AND c.category = ?";
+            values.push(category);
         }
 
-        return res.status(201).json({ message: "Community created successfully", rows });
+        if (name) {
+            query += " AND c.name LIKE ?";
+            values.push(`%${name}%`);
+        }
+
+        query += " ORDER BY c.createdAt DESC";
+
+        const [rows] = await db.query(query, values);
+
+        return res.status(200).json({message:'communities found', communities: rows });
+
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ message: "internal server error"});
+        return res.status(500).json({ message: "internal server error" });
     }
 }
 
@@ -71,7 +86,7 @@ export const GetCommunitiesByCat = async (req, res) => {
             [category]
         );
 
-        return res.status(200).json({ communities: rows });
+        return res.status(200).json({ message:'communities found', communities: rows });
 
     } catch (error) {
         console.log(error);
@@ -80,6 +95,7 @@ export const GetCommunitiesByCat = async (req, res) => {
 };
 
 export const GetCommunityById = async (req, res) => {
+
     const user = req.user.id
     const id = req.params.id 
 
