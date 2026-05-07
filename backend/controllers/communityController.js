@@ -1,0 +1,179 @@
+import db from "../config/db.js";
+import { randomUUID } from "crypto";
+
+
+export const CreateCommunity = async (req, res) => {
+    const user = req.user.id;
+    const { name, description, category } = req.body;
+
+    if(!name || !description || !category){
+        return res.status(400).json({ message: "all fields required"})
+    };
+
+    try {
+
+        const [rows] = await db.query('SELECT * FROM community WHERE name = ?', [name])
+
+        if (rows.length > 0) {
+            return res.status(400).json({ message: "community with this name already exists " });
+        }
+
+        const communityId = randomUUID();
+
+        await db.query(
+            'INSERT INTO community (id, name, description, category, createdBy) VALUES (?, ?, ?, ?, ?)',
+            [communityId, name, description, category, user]
+        )
+
+        await db.query(
+            'INSERT INTO community_members (userId, communityId, role) VALUES (?, ?, ?)',
+            [user, communityId, 'owner']
+        );
+
+        return res.status(201).json({ message: "Community created successfully" });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "internal server error"});
+    }
+}
+
+export const GetCommunities = async (req, res) => {
+
+    try {
+        const [rows] = await db.query(
+            `SELECT c.*, u.name AS creatorName
+            FROM community c
+            JOIN users u ON c.createdBy = u.id
+            ORDER BY c.createdAt DESC`
+        )
+
+        if (rows.length === 0) {
+            return res.status(400).json({ message: "no community found" });
+        }
+
+        return res.status(201).json({ message: "Community created successfully", rows });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "internal server error"});
+    }
+}
+
+export const GetCommunitiesByCat = async (req, res) => {
+    const category = req.params.category;
+
+    try {
+        const [rows] = await db.query(
+            `SELECT c.*, u.name AS creatorName
+             FROM community c
+             JOIN users u ON c.createdBy = u.id
+             WHERE c.category = ?
+             ORDER BY c.createdAt DESC`,
+            [category]
+        );
+
+        return res.status(200).json({ communities: rows });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "internal server error" });
+    }
+};
+
+export const GetCommunityById = async (req, res) => {
+    const user = req.user.id
+    const id = req.params.id 
+
+    if(!id){
+        return res.status(400).json({ message: "community id is required" })
+    }
+        try {
+
+        const [community] = await db.query(
+            `SELECT * FROM community c WHERE id = ?`,
+            [id]
+        )
+
+        if (community.length === 0) {
+            return res.status(400).json({ message: "no community found" });
+        }
+
+        const [members] = await db.query(
+            `SELECT cm.role, cm.userId, u.id, u.name, u.email, u.profilePic
+            FROM community_members cm
+            JOIN users u ON cm.userId = u.id
+            WHERE cm.communityId = ?`,
+            [id]
+        )
+
+        return res.status(201).json({ message: "Community created successfully", community: community[0], members });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "internal server error"});
+    }
+}
+
+export const UpdateCommunity = async (req, res) => {
+    const user = req.user.id;
+    const id = req.params.id;
+    const { name, description, category } = req.body;
+
+    if(!name || !description || !category){
+        return res.status(400).json({ message: "all fields required"})
+    };
+
+    try {
+
+        const [rows] = await db.query('SELECT * FROM community WHERE id = ?', [id])
+
+        if (rows.length === 0) {
+            return res.status(400).json({ message: "community does not exist " });
+        }
+
+        if(rows[0].createdBy !== user){
+            return res.status(403).json({ message: "you are not authorized to delete this community" });
+        }
+
+        await db.query(
+            'UPDATE community SET name = ?, description = ?, category = ? WHERE id = ?',
+            [name, description, category, id]
+        )
+
+        return res.status(201).json({ message: "Community updated successfully", rows: rows[0] });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "internal server error"});
+    }
+}
+
+
+export const DeleteCommunity = async (req, res) => {
+    const user = req.user.id;
+    const id = req.params.id;
+
+    if(!id){
+        return res.status(400).json({ message: "community id is required"})
+    };
+
+    try {
+        const [rows] = await db.query('SELECT * FROM community WHERE id = ?', [id])
+
+        if (rows.length === 0) {
+            return res.status(400).json({ message: "community does not exist " });
+        }
+
+        if(rows[0].createdBy !== user){
+            return res.status(403).json({ message: "you are not authorized to delete this community" });
+        }
+
+        await db.query(
+            'DELETE FROM community WHERE id = ?',
+            [id]
+        )
+
+        return res.status(201).json({ message: "Community deleted successfully" });
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ message: "internal server error"});
+    }
+}
+

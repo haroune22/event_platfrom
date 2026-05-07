@@ -4,6 +4,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 
 import userRoute from './routes/user.js'
+import communityRoute from './routes/community.js'
 import db from "./config/db.js";
 
 
@@ -18,6 +19,7 @@ app.use(cookieParser());
 //routes
 
 app.use('/api/auth', userRoute)
+app.use('/api/community', communityRoute)
 
 app.listen(PORT, ()=> {
     console.log(`app is listening on port ${PORT}`)
