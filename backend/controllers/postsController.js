@@ -4,21 +4,22 @@ export const CreatePosts = async (req, res) => {
     const user = req.user.id
     const { title, content, media, type, communityId, category } = req.body
 
-    if(!title || !content || !media || !type || !communityId || !category){
+    if(!title || !content || !type || !category){
         return res.status(400).json({ message: "all fields required"})
     }
 
     try {
 
-        const [community] = await db.query(
-            `SELECT * FROM community WHERE id = ?`,
-            [communityId]
-        )
-
-        if (community.length === 0) {
-            return res.status(404).json({ message: "community not found" });
+        if(communityId ) { 
+            const [community] = await db.query(
+                `SELECT * FROM community WHERE id = ?`,
+                [communityId]
+            )
+            if (community.length === 0) {
+                return res.status(404).json({ message: "community not found" });
+            }
         }
-        
+
         await db.query(
         `INSERT INTO posts (title, content, media, type, userId, communityId, category)
         VALUES (?, ?, ?, ?, ?, ?, ?)`,
@@ -29,7 +30,7 @@ export const CreatePosts = async (req, res) => {
 
     } catch (error) {
         console.log(error)
-        return res.status().json({ message: 'internal message error'})
+        return res.status(500).json({ message: 'internal server  error'})
     }
 };
 
@@ -40,7 +41,7 @@ export const GetPosts = async (req, res) => {
         let query = `
             SELECT p.*, u.name AS creatorName
             FROM posts p
-            JOIN users u ON p.createdBy = u.id
+            JOIN users u ON p.userId = u.id
             WHERE 1=1
         `;
 
@@ -48,7 +49,7 @@ export const GetPosts = async (req, res) => {
 
         if (communityId) {
             query += " AND p.communityId = ?";
-            values.push(`%${communityId}%`);
+            values.push(`${communityId}`);
         }
         
         if (category) {
@@ -82,7 +83,7 @@ export const GetPostsByCat = async (req, res) => {
         const [rows] = await db.query(`
             SELECT p.*, u.name AS creatorName
             FROM posts p
-            JOIN users u ON c.createdBy = u.id
+            JOIN users u ON p.userId = u.id
             WHERE p.category = ?
             ORDER BY p.createdAt DESC
         `, [category]
@@ -125,22 +126,77 @@ export const GetPostById = async (req, res) => {
 
 export const UpdatePost = async (req, res) => {
     const user = req.user.id
+    const id = req.params.id
+
+    const { title, content, media, category } = req.body
+
+    if(!title || !content || !media || !category){
+        return res.status(400).json({ message: "all fields required"})
+    }
+
     try {
+
+        const [post] = await db.query(
+            `SELECT * FROM posts WHERE id = ?`,
+            [id]
+        )
         
+        if(post.length === 0){
+            return res.status(404).json({ message: 'post not found'})
+        }
+
+        if(post[0].userId !== user){
+            return res.status(400).json({ message: 'not authorized to update this post'})
+        }
+
+        await db.query(
+            `UPDATE posts
+            SET title = ?, content = ?, media = ?, category = ?
+            WHERE id = ?
+            `,
+            [title, content, media, category, id]
+        )
+
+        const [updatedPost] = await db.query(
+            `SELECT * FROM posts WHERE id = ?`,
+            [id]
+        )
+        return res.status(200).json({ message: 'post updated successfully', post: updatedPost[0]})
     } catch (error) {
         console.log(error)
-        return res.status().json({ message: 'internal message error'})
+        return res.status().json({ message: 'internal server  error'})
     }
 
 };
 
 export const DeletePosts = async (req, res) => {
     const user = req.user.id
+    const id = req.params.id
+
+
     try {
+
+        const [post] = await db.query(
+            `SELECT * FROM posts WHERE id = ?`,
+            [id]
+        )
         
+        if(post.length === 0){
+            return res.status(404).json({ message: 'post not found'})
+        }
+
+        if(post[0].userId !== user){
+            return res.status(400).json({ message: 'not authorized to delete this post'})
+        }
+
+        await db.query(
+            `DELETE FROM posts WHERE id = ?`,
+            [id]
+        )
+
+        return res.status(200).json({ message: 'post deleted successfully' })
     } catch (error) {
         console.log(error)
-        return res.status().json({ message: 'internal message error'})
+        return res.status().json({ message: 'internal server  error'})
     }
-
 }
