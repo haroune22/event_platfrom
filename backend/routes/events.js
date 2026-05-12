@@ -1,7 +1,8 @@
 import { Router } from "express";
 
 import { authMiddleware } from "../middleware/authMiddleware.js";
-import { AttendEvent, CreateEvent, DeleteEvent, GetEvent, GetEventAttendees, GetEvents, LeaveEvent, UpdateEvent } from "../controllers/eventController.js";
+import { CreateEvent, DeleteEvent, GetEvent, GetEvents, UpdateEvent } from "../controllers/eventController.js";
+import { AttendEvent, GetEventAttendees, LeaveEvent } from "../controllers/eventAttendeesController.js";
 
 
 const router = Router()
