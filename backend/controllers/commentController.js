@@ -4,6 +4,7 @@ export const CreateComment = async (req, res) => {
     const user = req.user.id;
     const postId = req.params.postId;
     const { text } = req.body;
+    
     if(!text){
         return res.status(400).json({ message: 'text required'})
     };
@@ -22,6 +23,7 @@ export const CreateComment = async (req, res) => {
             `INSERT INTO comments (text, postId, userId) VALUES (?, ?, ?)`,
             [text, postId, user]
         );
+        await updateUserInterest(user, post[0].category, 3)
 
         return res.status(200).json({ message: 'comment created successfully ', comment: comment[0]});
     } catch (error) {
@@ -53,6 +55,8 @@ export const DeleteComment = async (req, res) => {
             `DELETE FROM comments WHERE id = ?`,
             [commentId]
         )
+
+
         return res.status(200).json({ message: 'comment deleted successfully '});
     } catch (error) {
         console.log(error)

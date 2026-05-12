@@ -42,6 +42,8 @@ export const CreateEvent = async (req, res) => {
             VALUES (?, ?, ?)`,
             [user, postId, eventDate]
         );
+        
+        await updateInterest(user, category, 5)
 
         return res.status(201).json({ message: "event created" });
 
@@ -118,6 +120,7 @@ export const GetEvent = async (req, res) => {
             return res.status(404).json({ message: "event not found" });
         }
 
+        
         return res.status(200).json({ message: 'event retrieved', event: event[0]});
 
     } catch (error) {

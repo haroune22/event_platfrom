@@ -1,4 +1,5 @@
 import db from "../config/db";
+import { updateUserInterest } from "../utils/userIntrest";
 
 export const CreatePosts = async (req, res) => {
     const user = req.user.id
@@ -9,7 +10,6 @@ export const CreatePosts = async (req, res) => {
     }
 
     try {
-
         if(communityId ) { 
             const [community] = await db.query(
                 `SELECT * FROM community WHERE id = ?`,
@@ -25,6 +25,8 @@ export const CreatePosts = async (req, res) => {
         VALUES (?, ?, ?, ?, ?, ?, ?)`,
         [title, content, media, type, user, communityId, category]
         );
+
+        await updateUserInterest(user, category, 5)
         
         return res.status(201).json({ message: 'post created successfully'})
 
@@ -77,7 +79,8 @@ export const GetPosts = async (req, res) => {
 };
 
 export const GetPostsByCat = async (req, res) => {
-   const category = req.params.category;
+    const user = req.user.id
+    const category = req.params.category;
 
     try {
         const [rows] = await db.query(`
@@ -115,7 +118,6 @@ export const GetPostById = async (req, res) => {
         if (post.length === 0) {
             return res.status(400).json({ message: "no post found" });
         }
-
 
         return res.status(201).json({ message: "Community created successfully", post: post[0] });
     } catch (error) {

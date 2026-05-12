@@ -47,6 +47,8 @@ export const AttendEvent = async (req, res) => {
             `INSERT INTO event_attendees (eventId, userId) VALUES (?, ?)`,
             [eventId, user]
         )
+
+        await updateUserInterest(user, event[0].category, 5)
         
         return res.status(200).json({ message: 'event joined'})
     } catch (error) {
@@ -82,6 +84,8 @@ export const LeaveEvent = async (req, res) => {
             `DELETE FROM event_attendees WHERE eventId = ? AND userId = ?`,
             [eventId, user]
         )
+        
+        await updateUserInterest(user, event[0].category, -5)
         
         return res.status(200).json({ message: 'user left event'})
     } catch (error) {

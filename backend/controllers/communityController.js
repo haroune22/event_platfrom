@@ -30,6 +30,8 @@ export const CreateCommunity = async (req, res) => {
             [user, communityId, 'owner']
         );
 
+        await updateInterest(user, category, 5)
+
         return res.status(201).json({ message: "Community created successfully" });
     } catch (error) {
         console.log(error);
@@ -185,6 +187,8 @@ export const DeleteCommunity = async (req, res) => {
             'DELETE FROM community WHERE id = ?',
             [id]
         )
+
+        await updateUserInterest(user, rows[0].category, -5)
 
         return res.status(201).json({ message: "Community deleted successfully" });
     } catch (error) {

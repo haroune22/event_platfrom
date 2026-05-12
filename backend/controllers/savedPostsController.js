@@ -33,6 +33,8 @@ export const SavePost = async (req, res) => {
             [user, postId]
         )
 
+        await updateUserInterest(user, post[0].category, 5)
+
         return res.status(200).json({ message: 'post saved successfully'})
         
     } catch (error) {
@@ -70,6 +72,8 @@ export const UnSavePost = async (req, res) => {
             `DELETE FROM saved_posts WHERE userId = ? AND postId = ?`,
             [user, postId]
         )
+        
+        await updateUserInterest(user, post[0].category, -5)
 
         return res.status(200).json({ message: 'post saved successfully'})
         
