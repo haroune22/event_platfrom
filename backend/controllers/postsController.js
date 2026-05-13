@@ -39,6 +39,11 @@ export const CreatePosts = async (req, res) => {
 export const GetPosts = async (req, res) => {
     const { category, title, communityId } = req.query;
 
+    const page = Math.max(parseInt(req.query.page) || 1, 1);
+    const limit = Math.min( Math.max(parseInt(req.query.limit) || 10, 1), 50 );
+
+    const offset = (page -1) * limit
+
     try {
         let query = `
             SELECT p.*, u.name AS creatorName
@@ -74,6 +79,10 @@ export const GetPosts = async (req, res) => {
         }
 
         query += " ORDER BY p.createdAt DESC";
+
+        query += ` LIMIT ? OFFSET ?`;
+
+        values.push(limit, offset);
 
         const [rows] = await db.query(query, values);
 

@@ -43,6 +43,11 @@ export const CreateCommunity = async (req, res) => {
 export const GetCommunities = async (req, res) => {
     const user = req.user.id
     const { category, name } = req.query;
+    
+    const page = Math.max(parseInt(req.query.page) || 1, 1);
+    const limit = Math.min( Math.max(parseInt(req.query.limit) || 10, 1), 50 );
+
+    const offset = (page -1) * limit
 
     try {
         let query = `
@@ -74,6 +79,9 @@ export const GetCommunities = async (req, res) => {
         }
 
         query += " ORDER BY c.createdAt DESC";
+        query += ` LIMIT ? OFFSET ?`;
+
+        values.push(limit, offset);
 
         const [rows] = await db.query(query, values);
 

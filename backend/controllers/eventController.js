@@ -59,6 +59,11 @@ export const GetEvents = async (req, res) => {
     const user = req.user.id
     const { category, communityId, title } = req.query
 
+    const page = Math.max(parseInt(req.query.page) || 1, 1);
+    const limit = Math.min( Math.max(parseInt(req.query.limit) || 10, 1), 50 );
+
+    const offset = (page -1) * limit
+
     try {
         let query = 
         `SELECT p.*, u.username, u.profilePic, e.eventDate
@@ -95,6 +100,10 @@ export const GetEvents = async (req, res) => {
         }
         
         query += " ORDER BY p.createdAt DESC";
+
+        query += ` LIMIT ? OFFSET ?`;
+
+        values.push(limit, offset);
         
         const [events] = await db.query(
             query,
