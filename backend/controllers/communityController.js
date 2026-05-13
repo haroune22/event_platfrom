@@ -1,5 +1,6 @@
 import db from "../config/db.js";
 import { randomUUID } from "crypto";
+import { getUserInterest } from "../utils/userIntrest.js";
 
 
 export const CreateCommunity = async (req, res) => {
@@ -40,7 +41,7 @@ export const CreateCommunity = async (req, res) => {
 }
 
 export const GetCommunities = async (req, res) => {
-
+    const user = req.user.id
     const { category, name } = req.query;
 
     try {
@@ -61,6 +62,15 @@ export const GetCommunities = async (req, res) => {
         if (name) {
             query += " AND c.name LIKE ?";
             values.push(`%${name}%`);
+        }
+
+        if(!name && !category){
+            const categories = await getUserInterest(user);
+                
+            if (categories.length > 0) {
+                query += ` AND p.category IN (${categories.map(() => '?').join(',')})`;
+                values.push(...categories);
+            }
         }
 
         query += " ORDER BY c.createdAt DESC";

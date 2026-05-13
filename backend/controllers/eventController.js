@@ -1,5 +1,6 @@
 import db from "../config/db"
 import { randomUUID } from "crypto";
+import { getUserInterest } from "../utils/userIntrest";
 
 
 
@@ -55,7 +56,7 @@ export const CreateEvent = async (req, res) => {
 
 
 export const GetEvents = async (req, res) => {
-
+    const user = req.user.id
     const { category, communityId, title } = req.query
 
     try {
@@ -83,6 +84,15 @@ export const GetEvents = async (req, res) => {
             query += ` AND p.title LIKE ?`
             values.push(`%${title}%`)
         };
+
+        if(!title && !category && communityId){
+            const categories = await getUserInterest(user);
+        
+            if (categories.length > 0) {
+                query += ` AND p.category IN (${categories.map(() => '?').join(',')})`;
+                values.push(...categories);
+            }
+        }
         
         query += " ORDER BY p.createdAt DESC";
         

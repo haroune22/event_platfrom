@@ -26,5 +26,8 @@ router.post('/:id/save', authMiddleware, SavePost)
 router.delete('/:Id/save', authMiddleware, UnSavePost)
 router.get('/saved', authMiddleware, GetSavedPosts)
 
+// not interested
+router.post('/:id/notInterested', authMiddleware, NotInterestedPost )
+
 
 export default router

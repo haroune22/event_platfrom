@@ -1,5 +1,5 @@
 import db from "../config/db";
-import { updateUserInterest } from "../utils/userIntrest";
+import { getUserInterest, notInterested, updateUserInterest } from "../utils/userIntrest";
 
 export const CreatePosts = async (req, res) => {
     const user = req.user.id
@@ -64,6 +64,14 @@ export const GetPosts = async (req, res) => {
             values.push(`%${title}%`);
         }
 
+        if(!title && !category && communityId){
+            const categories = await getUserInterest(user);
+
+            if (categories.length > 0) {
+                query += ` AND p.category IN (${categories.map(() => '?').join(',')})`;
+                values.push(...categories);
+            }
+        }
 
         query += " ORDER BY p.createdAt DESC";
 
@@ -175,7 +183,6 @@ export const DeletePosts = async (req, res) => {
     const user = req.user.id
     const id = req.params.id
 
-
     try {
 
         const [post] = await db.query(
@@ -197,6 +204,36 @@ export const DeletePosts = async (req, res) => {
         )
 
         return res.status(200).json({ message: 'post deleted successfully' })
+    } catch (error) {
+        console.log(error)
+        return res.status().json({ message: 'internal server  error'})
+    }
+}
+
+
+export const NotInterested = async (req, res) => {
+    const user = req.user.id
+    const postId = req.params.id
+
+    try {
+
+        const [post] = await db.query(
+            `SELECT * FROM posts WHERE id = ?`,
+            [id]
+        )
+        
+        if(post.length === 0){
+            return res.status(404).json({ message: 'post not found'})
+        }
+
+        if(post[0].userId === user){
+            return res.status(400).json({ message: 'the owner can not be interested in the post he created'})
+        } 
+
+        await notInterested(user, post[0].category)
+
+        return res.status(200).json({ message: 'user interest updated'})
+        
     } catch (error) {
         console.log(error)
         return res.status().json({ message: 'internal server  error'})
