@@ -62,7 +62,7 @@ export const Register = async (req, res) => {
         const emailLower = email.toLowerCase();
         // check if user exists
         const [existingUser] = await db.query(
-            "SELECT * FROM users WHERE email = ? OR username = ?",
+            "SELECT * FROM users WHERE email = ? OR name = ?",
             [emailLower, username]
         );
 
@@ -76,7 +76,7 @@ export const Register = async (req, res) => {
 
         // insert user
         await db.query(
-            "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
+            "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
             [username, emailLower, hashedPassword]
         );
 

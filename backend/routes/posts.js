@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import { authMiddleware } from "../middleware/authMiddleware.js";
-import { CreatePosts, DeletePosts, GetPostById, GetPosts, GetPostsByCat, UpdatePost } from "../controllers/PostsController.js";
+import { CreatePosts, DeletePosts, GetPostById, GetPosts, GetPostsByCat, NotInterested, UpdatePost } from "../controllers/postsController.js";
 import { CreateComment, DeleteComment, GetComments } from "../controllers/commentController.js";
 import { GetSavedPosts, SavePost, UnSavePost } from "../controllers/savedPostsController.js";
 import { createLimiter, generalLimiter } from "../utils/limiters.js";
@@ -24,11 +24,11 @@ router.get('/:postId/comments', authMiddleware, GetComments)
 
 //saved posts
 router.post('/:id/save', authMiddleware, SavePost)
-router.delete('/:Id/save', authMiddleware, UnSavePost)
+router.delete('/:id/save', authMiddleware, UnSavePost)
 router.get('/saved', authMiddleware, GetSavedPosts)
 
 // not interested
-router.post('/:id/notInterested', authMiddleware, NotInterestedPost )
+router.post('/:id/notInterested', authMiddleware, NotInterested )
 
 
 export default router

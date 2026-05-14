@@ -11,13 +11,13 @@ const router = Router()
 
 router.post('/', authMiddleware, createLimiter, CreateEvent)
 router.get('/', authMiddleware, generalLimiter, GetEvents)
-router.get('/id', authMiddleware, GetEvent)
+router.get('/:id', authMiddleware, GetEvent)
 router.put('/:id', authMiddleware, UpdateEvent)
 router.delete('/:id', authMiddleware, DeleteEvent)
 
 //event_attendance
 router.post('/:id/attend', authMiddleware, AttendEvent)
-router.post('/:id/leave', authMiddleware, LeaveEvent)
+router.delete('/:id/leave', authMiddleware, LeaveEvent)
 router.get('/:id/event_attendees', authMiddleware, GetEventAttendees)
 
 

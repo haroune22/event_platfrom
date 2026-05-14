@@ -5,6 +5,8 @@ import cookieParser from "cookie-parser";
 
 import userRoute from './routes/user.js'
 import communityRoute from './routes/community.js'
+import postsRoute from './routes/posts.js'
+import eventsRouter from './routes/events.js'
 import db from "./config/db.js";
 
 
@@ -20,6 +22,8 @@ app.use(cookieParser());
 
 app.use('/api/auth', userRoute)
 app.use('/api/community', communityRoute)
+app.use('/api/posts', postsRoute)
+app.use('/api/events', eventsRouter)
 
 app.listen(PORT, ()=> {
     console.log(`app is listening on port ${PORT}`)

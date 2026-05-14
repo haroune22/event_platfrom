@@ -1,3 +1,5 @@
+import db from "../config/db.js";
+
 export const updateUserInterest = async (userId, category, points) => {
     const [interest] = await db.query(
         `SELECT * FROM user_interests

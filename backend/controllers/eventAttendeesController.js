@@ -1,4 +1,5 @@
-import db from "../config/db";
+import db from "../config/db.js";
+import { updateUserInterest } from "../utils/userInterest.js";
 
 export const AttendEvent = async (req, res) => {
     const user = req.user.id
@@ -8,7 +9,7 @@ export const AttendEvent = async (req, res) => {
 
         const [event] = await db.query(
             `SELECT e.*, p.*
-            FROM event e
+            FROM events e
             JOIN posts p ON e.postId = p.id
             WHERE e.id = ?`,
             [eventId]
@@ -66,7 +67,7 @@ export const LeaveEvent = async (req, res) => {
 
         const [event] = await db.query(
             `SELECT e.*, p.*
-            FROM event e
+            FROM events e
             JOIN posts p ON e.postId = p.id
             WHERE e.id = ?`,
             [eventId]
@@ -102,7 +103,7 @@ export const GetEventAttendees = async (req, res) => {
 
         const [event] = await db.query(
             `SELECT e.*, p.*
-            FROM event e
+            FROM events e
             JOIN posts p ON e.postId = p.id
             WHERE e.id = ?`,
             [eventId]
@@ -113,7 +114,7 @@ export const GetEventAttendees = async (req, res) => {
         }
         
         const [event_attendees] = await db.query(
-            `SELECT eat.*, u.username, u.profilePic
+            `SELECT eat.*, u.name, u.profilePic
             FROM event_attendees eat
             JOIN users u ON eat.userId = u.id
             WHERE eat.eventId = ?

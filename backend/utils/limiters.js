@@ -1,4 +1,4 @@
-import { createRateLimiter } from "../middleware/rateLimiterMiddleware";
+import { createRateLimiter } from "../middleware/rateLimiterMiddleware.js";
 
 export const authLimiter = createRateLimiter(
     5,

@@ -1,35 +1,61 @@
-import db from "../config/db";
-import { getUserInterest, notInterested, updateUserInterest } from "../utils/userIntrest";
+import db from "../config/db.js";
+import { randomUUID } from "crypto";
+
+import { getUserInterest, notInterested, updateUserInterest } from "../utils/userInterest.js";
 
 export const CreatePosts = async (req, res) => {
-    const user = req.user.id
-    const { title, content, media, type, communityId, category } = req.body
+    const user = req.user.id;
 
-    if(!title || !content || !type || !category){
-        return res.status(400).json({ message: "all fields required"})
+    const { title, content,media, type, communityId, category, externalLink, difficulty } = req.body;
+
+    if (!title || !content || !type || !category) {
+        return res.status(400).json({
+            message: "all fields required"
+        });
     }
 
     try {
-        if(communityId ) { 
+        if (communityId) {
             const [community] = await db.query(
                 `SELECT * FROM community WHERE id = ?`,
                 [communityId]
-            )
+            );
+
             if (community.length === 0) {
                 return res.status(404).json({ message: "community not found" });
             }
         }
 
+        const postId = randomUUID();
+
         await db.query(
-        `INSERT INTO posts (title, content, media, type, userId, communityId, category)
-        VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [title, content, media, type, user, communityId, category]
+            `INSERT INTO posts
+            (id, title, content, media, type, userId, communityId, category)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [ postId, title, content, media, type, user, communityId, category]
         );
 
-        await updateUserInterest(user, category, 5)
-        
-        return res.status(201).json({ message: 'post created successfully'})
+        if (
+            type === "education" &&
+            (externalLink || difficulty)
+        ) {
 
+            await db.query(
+                `INSERT INTO learning_resources
+                (postId, userId, difficulty, externalLink)
+                VALUES (?, ?, ?, ?)`,
+                [
+                    postId,
+                    user,
+                    difficulty || null,
+                    externalLink || null
+                ]
+            );
+        }
+
+        await updateUserInterest(user, category, 5);
+
+        return res.status(201).json({ message: "post created successfully" });
     } catch (error) {
         console.log(error)
         return res.status(500).json({ message: 'internal server  error'})
@@ -109,7 +135,7 @@ export const GetPostsByCat = async (req, res) => {
         `, [category]
         );
 
-        return res.status(200).json({ message:'communities found', posts: rows });
+        return res.status(200).json({ message:'posts found', posts: rows });
 
     } catch (error) {
         console.log(error);
@@ -149,10 +175,6 @@ export const UpdatePost = async (req, res) => {
 
     const { title, content, media, category } = req.body
 
-    if(!title || !content || !media || !category){
-        return res.status(400).json({ message: "all fields required"})
-    }
-
     try {
 
         const [post] = await db.query(
@@ -168,18 +190,40 @@ export const UpdatePost = async (req, res) => {
             return res.status(400).json({ message: 'not authorized to update this post'})
         }
 
-        await db.query(
-            `UPDATE posts
-            SET title = ?, content = ?, media = ?, category = ?
-            WHERE id = ?
-            `,
-            [title, content, media, category, id]
-        )
+        const updates = {
+            title,
+            content,
+            media,
+            category
+        };
+
+        const values = []
+        const fields = []
+
+        for(const key in updates){
+            if(updates[key] !== undefined){
+                fields.push(`${key} = ?`)
+                values.push(updates[key])
+            }
+        }
+        
+        if (fields.length > 0) {
+            values.push(post[0].id);
+
+            await db.query(
+                `
+                UPDATE posts
+                SET ${fields.join(", ")}
+                WHERE id = ?`,
+                values
+            );
+        }
 
         const [updatedPost] = await db.query(
             `SELECT * FROM posts WHERE id = ?`,
             [id]
         )
+
         return res.status(200).json({ message: 'post updated successfully', post: updatedPost[0]})
     } catch (error) {
         console.log(error)

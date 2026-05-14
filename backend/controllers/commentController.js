@@ -1,4 +1,5 @@
-import db from "../config/db"
+import db from "../config/db.js"
+import { updateUserInterest } from "../utils/userInterest.js";
 
 export const CreateComment = async (req, res) => {
     const user = req.user.id;
@@ -23,6 +24,7 @@ export const CreateComment = async (req, res) => {
             `INSERT INTO comments (text, postId, userId) VALUES (?, ?, ?)`,
             [text, postId, user]
         );
+        console.log(req.cookies)
         await updateUserInterest(user, post[0].category, 3)
 
         return res.status(200).json({ message: 'comment created successfully ', comment: comment[0]});
@@ -79,7 +81,7 @@ export const GetComments = async (req,res) => {
         }; 
 
         const [comments] = await db.query(
-            `SELECT p.*, u.username, u.profilePic 
+            `SELECT c.*, u.name, u.profilePic 
             FROM comments c
             JOIN users u ON c.userId = u.id
             WHERE postId = ?

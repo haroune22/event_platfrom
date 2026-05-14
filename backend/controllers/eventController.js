@@ -1,6 +1,6 @@
-import db from "../config/db"
+import db from "../config/db.js";
 import { randomUUID } from "crypto";
-import { getUserInterest } from "../utils/userIntrest";
+import { getUserInterest, updateUserInterest } from "../utils/userInterest.js";
 
 
 
@@ -44,7 +44,7 @@ export const CreateEvent = async (req, res) => {
             [user, postId, eventDate]
         );
         
-        await updateInterest(user, category, 5)
+        await updateUserInterest(user, category, 5)
 
         return res.status(201).json({ message: "event created" });
 
@@ -56,6 +56,7 @@ export const CreateEvent = async (req, res) => {
 
 
 export const GetEvents = async (req, res) => {
+
     const user = req.user.id
     const { category, communityId, title } = req.query
 
@@ -66,7 +67,7 @@ export const GetEvents = async (req, res) => {
 
     try {
         let query = 
-        `SELECT p.*, u.username, u.profilePic, e.eventDate
+        `SELECT p.*, u.name, u.profilePic, e.eventDate
         FROM posts p
         JOIN users u ON p.userId = u.id
         JOIN events e ON p.id = e.postId
@@ -121,18 +122,19 @@ export const GetEvents = async (req, res) => {
 
 export const GetEvent = async (req, res) => {
 
-    const eventId = req.params.id;
+    const user = req.user.id
+    const id = req.params.id;
 
     try {
 
         const [event] = await db.query(
-            `SELECT e.*, p.*, u.username, u.profilePic
+            `SELECT e.*, p.*, u.name, u.profilePic
             FROM events e
             JOIN posts p ON e.postId = p.id
             JOIN users u ON p.userId = u.id
             WHERE e.id = ?
             `,
-            [eventId]
+            [id]
         );
 
         if (event.length === 0) {
@@ -151,7 +153,7 @@ export const GetEvent = async (req, res) => {
 
 export const UpdateEvent = async (req, res) => {
     const user = req.user.id
-    const eventId = req.params.id
+    const id = req.params.id
     const { title, content, media, category, eventDate } = req.body;
 
     try {
@@ -161,7 +163,7 @@ export const UpdateEvent = async (req, res) => {
             JOIN posts p ON e.postId = p.id
             WHERE e.id = ?
             `,
-            [eventId]
+            [id]
         );
 
         if (event.length === 0) {
@@ -185,7 +187,7 @@ export const UpdateEvent = async (req, res) => {
             SET eventDate = ?
             WHERE id = ?
             `
-            [eventDate, eventId]
+            [eventDate, id]
         )
         }
 
@@ -194,7 +196,7 @@ export const UpdateEvent = async (req, res) => {
 
         for(const key in updates){
             if(updates[key] !== undefined){
-                fields.push(` ${key} = ?,`)
+                fields.push(`${key} = ?`)
                 values.push(updates[key])
             }
         }
@@ -222,16 +224,16 @@ export const UpdateEvent = async (req, res) => {
 
 export const DeleteEvent = async (req, res) => {
     const user = req.user.id
-    const eventId = req.params.id
+    const id = req.params.id
 
     try {
 
         const [event] = await db.query(
             `SELECT e.*, p.*
-            FROM event e
+            FROM events e
             JOIN posts p ON e.postId = p.id
             WHERE e.id = ?`,
-            [eventId]
+            [id]
         );
 
         if (event.length === 0) {

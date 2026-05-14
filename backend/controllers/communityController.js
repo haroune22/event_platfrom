@@ -1,6 +1,6 @@
 import db from "../config/db.js";
 import { randomUUID } from "crypto";
-import { getUserInterest } from "../utils/userIntrest.js";
+import { getUserInterest, updateUserInterest } from "../utils/userInterest.js";
 
 
 export const CreateCommunity = async (req, res) => {
@@ -31,7 +31,7 @@ export const CreateCommunity = async (req, res) => {
             [user, communityId, 'owner']
         );
 
-        await updateInterest(user, category, 5)
+        await updateUserInterest(user, category, 5)
 
         return res.status(201).json({ message: "Community created successfully" });
     } catch (error) {
@@ -73,7 +73,7 @@ export const GetCommunities = async (req, res) => {
             const categories = await getUserInterest(user);
                 
             if (categories.length > 0) {
-                query += ` AND p.category IN (${categories.map(() => '?').join(',')})`;
+                query += ` AND c.category IN (${categories.map(() => '?').join(',')})`;
                 values.push(...categories);
             }
         }
@@ -153,9 +153,6 @@ export const UpdateCommunity = async (req, res) => {
     const id = req.params.id;
     const { name, description, category } = req.body;
 
-    if(!name || !description || !category){
-        return res.status(400).json({ message: "all fields required"})
-    };
 
     try {
 
@@ -169,12 +166,39 @@ export const UpdateCommunity = async (req, res) => {
             return res.status(403).json({ message: "you are not authorized to delete this community" });
         }
 
-        await db.query(
-            'UPDATE community SET name = ?, description = ?, category = ? WHERE id = ?',
-            [name, description, category, id]
+        const updates = {
+            name,
+            description,
+            category
+        }
+
+        const fields = []
+        const values = []
+
+        for(const key in updates){
+            if(updates[key] !== undefined){
+                fields.push(`${key} = ?`)
+                values.push(updates[key])
+            }
+        }
+
+        if(fields.length > 0){
+            values.push(id)
+            await db.query(
+                `UPDATE community 
+                SET ${fields.join(", ")}
+                WHERE id = ?`,
+                values
+            )
+        }
+
+        
+        const [updatedCommunity] = await db.query(
+            `SELECT * FROM community WHERE id = ?`,
+            [id]
         )
 
-        return res.status(201).json({ message: "Community updated successfully", rows: rows[0] });
+        return res.status(201).json({ message: "Community updated successfully", rows: updatedCommunity[0] });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "internal server error"});
