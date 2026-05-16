@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 export function App() {
   return (
