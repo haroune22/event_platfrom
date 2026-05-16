@@ -69,11 +69,13 @@ CREATE TABLE comments (
 CREATE TABLE events (
 	id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
 	postId CHAR(36) NOT NULL,
+
 	eventDate DATETIME NOT NULL,
 	maxParticipants INT,
 
 	FOREIGN KEY (postId) REFERENCES posts(id) ON DELETE CASCADE
 );
+
 
 CREATE TABLE event_attendees (
 	eventId CHAR(36) NOT NULL,
@@ -130,8 +132,13 @@ ADD category ENUM('sports',
  ALTER TABLE community_members
  ADD role ENUM('owner', 'moderator', 'member') DEFAULT 'member';
  
+ALTER TABLE events
+ADD column userId char(36);
  
- CREATE TABLE user_intrests (
+ALTER TABLE events
+ADD FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE;
+
+ CREATE TABLE user_interests (
 	id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
 	userId CHAR(36) NOT NULL,
 	category ENUM('sports', 'gaming', 'technology', 'fitness', 'education', 'movies') NOT NULL,
@@ -141,4 +148,15 @@ ADD category ENUM('sports',
 
 	INDEX (userId)
 );
+use event_platform;
+
+ALTER TABLE posts ADD COLUMN updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+ALTER TABLE community ADD COLUMN updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+
+ALTER TABLE events
+MODIFY maxParticipants INT DEFAULT(20);
+
+SELECT * FROM comments;
+
 
