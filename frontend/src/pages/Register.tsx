@@ -1,10 +1,42 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Mail, User, Lock, ArrowRight } from "lucide-react"
+import { useState } from "react"
+import { useMutation } from "@tanstack/react-query"
+import { registerUser } from "@/api/user"
+import type { RegisterData } from "@/lib/types"
 
 const Register = () => {
+  const [email, setEmail] = useState<string>("")
+  const [password, setPassword] = useState<string>("")
+  const [username, setUsername] = useState<string>("")
+
+  const navigate = useNavigate()
+
+  const loginMutation = useMutation({
+    mutationFn: (credentials: RegisterData) => registerUser(credentials),
+    onSuccess: (data) => {
+      console.log("register successful:", data)
+      navigate("/")
+    },
+    onError: (error) => {
+      console.log(error)
+    },
+  })
+
+  const handleLogin = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault()
+    if (!username || !email || !password) {
+      console.log("username & Email and password required")
+      return
+    }
+    loginMutation.mutate({ username, email, password })
+  }
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-slate-50 via-blue-50 to-indigo-100 px-4 py-8">
       <div className="w-full max-w-md">
@@ -40,6 +72,8 @@ const Register = () => {
                 type="text"
                 placeholder="name"
                 className="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 transition outline-none hover:bg-white focus:border-transparent focus:ring-2 focus:ring-blue-500"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
 
@@ -52,6 +86,8 @@ const Register = () => {
                 type="email"
                 placeholder="name@example.com"
                 className="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 transition outline-none hover:bg-white focus:border-transparent focus:ring-2 focus:ring-blue-500"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
@@ -64,6 +100,8 @@ const Register = () => {
                 type="password"
                 placeholder="••••••••"
                 className="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 transition outline-none hover:bg-white focus:border-transparent focus:ring-2 focus:ring-blue-500"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
 
@@ -77,7 +115,10 @@ const Register = () => {
             </div>
           </div>
 
-          <Button className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 font-semibold text-white transition duration-200 hover:bg-blue-700">
+          <Button
+            onClick={(e) => handleLogin(e)}
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 font-semibold text-white transition duration-200 hover:bg-blue-700"
+          >
             Sign Up
             <ArrowRight size={18} />
           </Button>

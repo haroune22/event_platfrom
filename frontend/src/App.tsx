@@ -3,13 +3,17 @@ import Login from "./pages/Login"
 import Register from "./pages/Register"
 import Home from "./pages/Home"
 import { ProtectedRoutes } from "./components/ProtectedRoutes"
+import { PublicRoute } from "./components/PublicRouter"
 
 export function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        {/* Public Routes */}
+        <Route element={<PublicRoute />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Route>
 
         {/* Protected Routes */}
         <Route element={<ProtectedRoutes />}>

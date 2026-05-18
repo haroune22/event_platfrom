@@ -8,7 +8,7 @@ const router = Router()
 
 router.post('/login', authLimiter, Login)
 router.post('/register', authLimiter, Register)
-router.post('/user', authMiddleware, getUser)
+router.get('/user', authMiddleware, getUser)
 router.post('/logout', authMiddleware, Logout)
 
 
