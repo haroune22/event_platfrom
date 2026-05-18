@@ -108,3 +108,23 @@ export const generateToken = (id) => {
     expiresIn: "7d",
   });
 };
+
+export const getUser = async(req, res) => {
+    const user = req.user.id
+    try {
+
+         const [User] = await db.query(
+            "SELECT id, name, email, profilePic, bio, createdAT FROM users WHERE id = ?",
+            [user]
+        );
+
+        if (User.length === 0) {
+            return res.status(409).json({ message: "User not found" });
+        }
+        
+        return res.status(201).json({ message: "User retrieved successfully", user: User[0] });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Server error" });
+    }
+}
