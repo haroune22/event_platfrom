@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Mail, Lock, ArrowRight } from "lucide-react"
 import { useState } from "react"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { loginUser } from "@/api/user"
 import type { LoginData } from "@/lib/types"
 
@@ -12,10 +12,14 @@ const Login = () => {
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   const loginMutation = useMutation({
     mutationFn: (credentials: LoginData) => loginUser(credentials),
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
+      await queryClient.invalidateQueries({
+        queryKey: ["auth-user"],
+      })
       console.log("Login successful:", data)
       navigate("/")
     },
@@ -24,9 +28,7 @@ const Login = () => {
     },
   })
 
-  const handleLogin = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
+  const handleLogin = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
     if (!email || !password) {
       console.log("Email and password required")
