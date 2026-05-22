@@ -66,16 +66,21 @@ export const SideBar = () => {
             Categories
           </p>
           <div className="space-y-2 px-2">
-            {["Sports", "Gaming", "Technology", "Fitness", "Movies"].map(
-              (category) => (
-                <button
-                  key={category}
-                  className="w-full rounded-lg px-4 py-2 text-left text-sm text-gray-600 transition duration-200 hover:bg-gray-50 hover:text-gray-900"
-                >
-                  {category}
-                </button>
-              )
-            )}
+            {[
+              "Sports",
+              "Gaming",
+              "Technology",
+              "Fitness",
+              "Movies",
+              "education",
+            ].map((category) => (
+              <button
+                key={category}
+                className="w-full rounded-lg px-4 py-2 text-left text-sm text-gray-600 transition duration-200 hover:bg-gray-50 hover:text-gray-900"
+              >
+                {category}
+              </button>
+            ))}
           </div>
         </div>
       </div>

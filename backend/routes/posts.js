@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import { authMiddleware } from "../middleware/authMiddleware.js";
-import { CreatePosts, DeletePosts, GetPostById, GetPosts, GetPostsByCat, NotInterested, UpdatePost } from "../controllers/postsController.js";
+import { CreatePosts, DeletePosts, getFeedPosts, GetPostById, GetPosts, GetPostsByCat, NotInterested, UpdatePost } from "../controllers/postsController.js";
 import { CreateComment, DeleteComment, GetComments } from "../controllers/commentController.js";
 import { GetSavedPosts, SavePost, UnSavePost } from "../controllers/savedPostsController.js";
 import { createLimiter, generalLimiter } from "../utils/limiters.js";
@@ -12,6 +12,7 @@ const router = Router()
 
 router.post('/', authMiddleware, createLimiter , CreatePosts )
 router.get('/', authMiddleware, generalLimiter, GetPosts)
+router.get('/feed', authMiddleware, generalLimiter, getFeedPosts)
 router.get('/category/:category', authMiddleware, GetPostsByCat)
 router.get('/:id', authMiddleware, GetPostById)
 router.put('/:id', authMiddleware, UpdatePost)

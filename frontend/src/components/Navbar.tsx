@@ -25,6 +25,7 @@ export const Navbar = () => {
       console.log(error)
     },
   })
+
   const handleLogout = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
     logoutMutation.mutate()
@@ -80,7 +81,7 @@ export const Navbar = () => {
                   className="h-8 w-8 cursor-pointer rounded-full object-cover transition duration-200 hover:ring-2 hover:ring-blue-500"
                 />
               ) : (
-                <div className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 font-semibold text-white transition duration-200 hover:ring-2 hover:ring-blue-500">
+                <div className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-linear-to-br from-blue-400 to-indigo-600 font-semibold text-white transition duration-200 hover:ring-2 hover:ring-blue-500">
                   {user?.name?.charAt(0).toUpperCase()}
                 </div>
               )}

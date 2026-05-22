@@ -20,3 +20,26 @@ export interface RegisterData {
   email: string
   password: string
 }
+
+export type PostTypes = "normal" | "event" | "education"
+
+export type PostCategory =
+  | "sports"
+  | "gaming"
+  | "technology"
+  | "fitness"
+  | "education"
+  | "movies"
+
+export interface UpdatePostData {
+  title: string
+  content: string
+  media: string
+  category: PostCategory
+}
+export interface CreatePostData {
+  title: string
+  content: string
+  category: PostCategory
+  type: PostTypes
+}
