@@ -43,3 +43,7 @@ export interface CreatePostData {
   category: PostCategory
   type: PostTypes
 }
+
+export interface CreateCommentData {
+  text: string
+}
