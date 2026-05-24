@@ -47,3 +47,14 @@ export interface CreatePostData {
 export interface CreateCommentData {
   text: string
 }
+
+export interface Post {
+  id: string
+  title: string
+  content: string
+  type: PostTypes
+  media: string
+  category: PostCategory
+  creatorName: string
+  createdAt: Date
+}

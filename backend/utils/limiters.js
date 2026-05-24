@@ -1,13 +1,13 @@
 import { createRateLimiter } from "../middleware/rateLimiterMiddleware.js";
 
 export const authLimiter = createRateLimiter(
-    5,
+    100,
     10 * 60 * 1000,
     "Too many login attempts"
 );
 
 export const createLimiter = createRateLimiter(
-    20,
+    100,
     60 * 1000,
     "Too many actions, slow down"
 );
