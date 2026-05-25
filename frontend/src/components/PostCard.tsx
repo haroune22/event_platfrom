@@ -73,7 +73,7 @@ export const PostCard = ({ post, creatorProfilePic }: PostCardProps) => {
             <img
               src={post.media}
               alt={post.title}
-              className="h-auto max-h-[500px] w-full object-cover transition duration-200 hover:brightness-95"
+              className="h-auto max-h-125 w-full object-cover transition duration-200 hover:brightness-95"
             />
           </div>
         </Link>

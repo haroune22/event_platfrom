@@ -24,7 +24,7 @@ const Home = () => {
   }
 
   return (
-    <div>
+    <div className="">
       {posts?.map((post: Post) => (
         <PostCard post={post} key={post.id} />
       ))}

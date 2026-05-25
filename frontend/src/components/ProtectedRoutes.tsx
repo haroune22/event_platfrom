@@ -14,8 +14,8 @@ export const ProtectedRoutes = () => {
       <Navbar />
       <div className="flex pt-18">
         <SideBar />
-        <main className="flex flex-1 justify-center p-2">
-          <div className="w-full max-w-3xl">
+        <main className="w-full flex-1 md:ml-64">
+          <div className="mx-auto max-w-4xl px-4 py-6">
             <Outlet />
           </div>
         </main>

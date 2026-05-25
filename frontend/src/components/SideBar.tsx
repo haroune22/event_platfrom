@@ -35,7 +35,7 @@ export const SideBar = () => {
   const isActive = (path: string) => location.pathname === path
 
   return (
-    <aside className="fixed top-16 left-0 h-[calc(100vh-64px)] w-64 overflow-y-auto border-r border-gray-300 bg-white">
+    <aside className="fixed top-16 left-0 hidden h-[calc(100vh-64px)] w-64 overflow-y-auto border-r border-gray-300 bg-white md:block">
       <div className="space-y-8 p-6">
         <nav className="space-y-2">
           <p className="mb-3 px-4 text-xs font-semibold tracking-wider text-gray-500 uppercase">

@@ -24,7 +24,7 @@ const Post = () => {
     return <div>Error fetching posts</div>
   }
   return (
-    <div className="mx-auto flex min-h-full max-w-4xl rounded-lg border border-gray-100 bg-white shadow-sm">
+    <div className="mx-auto flex min-h-full max-w-2xl rounded-lg border border-gray-100 bg-white shadow-sm">
       <PostDetailsCard post={post} />
     </div>
   )
