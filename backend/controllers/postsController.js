@@ -187,7 +187,10 @@ export const GetPostById = async (req, res) => {
         try {
 
         const [post] = await db.query(
-            `SELECT * FROM posts WHERE id = ?`,
+            `SELECT p.*, u.profilePic, u.name AS creatorName
+            FROM posts p
+            JOIN users u ON p.userId = u.id
+            WHERE p.id = ?`,
             [id]
         )
 

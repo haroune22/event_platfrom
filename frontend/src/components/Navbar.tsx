@@ -37,7 +37,7 @@ export const Navbar = () => {
         <div className="flex h-16 items-center justify-between">
           <Link to="/" className="flex shrink-0 items-center gap-2">
             <div className="flex h-12 w-40 items-center justify-center rounded-lg bg-linear-to-br">
-              <img src="logo.png" />
+              <img src="logo.png" className="h-full w-full object-cover" />
             </div>
           </Link>
 
@@ -53,7 +53,6 @@ export const Navbar = () => {
           </div>
 
           <div className="hidden items-center gap-6 sm:flex">
-            {/* Notifications */}
             <button className="group relative">
               <Bell
                 size={20}

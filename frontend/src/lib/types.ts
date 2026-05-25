@@ -58,3 +58,15 @@ export interface Post {
   creatorName: string
   createdAt: Date
 }
+export interface PostDetails {
+  id: string
+  title: string
+  content: string
+  type: PostTypes
+  media: string
+  communityId: string
+  category: PostCategory
+  creatorName: string
+  profilePic: string
+  createdAt: Date
+}
