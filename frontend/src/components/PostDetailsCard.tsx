@@ -2,15 +2,20 @@ import { fetchCommunityById } from "@/api/community"
 import type { PostDetails } from "@/lib/types"
 import { useQuery } from "@tanstack/react-query"
 import { format } from "date-fns"
-import { Bookmark, Heart, Share2 } from "lucide-react"
+import { Bookmark, Heart, MessageCircle, Share2 } from "lucide-react"
 import { useState } from "react"
 import { Link } from "react-router-dom"
+import { Button } from "./ui/button"
 
 type PostDetailsCardProps = {
   post: PostDetails
+  setShowComments: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const PostDetailsCard = ({ post }: PostDetailsCardProps) => {
+export const PostDetailsCard = ({
+  post,
+  setShowComments,
+}: PostDetailsCardProps) => {
   const [isLiked, setIsLiked] = useState(false)
   const {
     data: community,
@@ -29,8 +34,6 @@ export const PostDetailsCard = ({ post }: PostDetailsCardProps) => {
   if (error) {
     return <div>Error fetching posts</div>
   }
-
-  console.log(community)
 
   return (
     <div className="flex h-full w-full flex-col justify-center gap-2 p-4">
@@ -95,9 +98,11 @@ export const PostDetailsCard = ({ post }: PostDetailsCardProps) => {
       <div className="my-2 h-px bg-gray-200" />
 
       <div className="flex items-center justify-between px-2 py-1">
-        <button
+        <Button
+          variant={"ghost"}
+          size={"lg"}
           onClick={() => setIsLiked(!isLiked)}
-          className={`group flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2 transition duration-200 ${
+          className={`group flex flex-1 transition duration-200 ${
             isLiked
               ? "text-red-600 hover:bg-red-50"
               : "text-gray-600 hover:bg-gray-100 hover:text-red-600"
@@ -110,17 +115,28 @@ export const PostDetailsCard = ({ post }: PostDetailsCardProps) => {
             }`}
           />
           <span className="text-sm font-medium">Like</span>
-        </button>
+        </Button>
 
-        <button className="group flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-600 transition duration-200 hover:bg-gray-100 hover:text-blue-600">
+        <Button
+          onClick={() => setShowComments((prev) => !prev)}
+          className="group flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-600 transition duration-200 hover:bg-gray-100 hover:text-blue-600"
+        >
+          <MessageCircle
+            size={18}
+            className="transition group-hover:scale-110"
+          />
+          <span className="text-sm font-medium">Comment</span>
+        </Button>
+
+        <Button className="group flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-600 transition duration-200 hover:bg-gray-100 hover:text-blue-600">
           <Share2 size={18} className="transition group-hover:scale-110" />
           <span className="text-sm font-medium">Share</span>
-        </button>
+        </Button>
 
-        <button className="group flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-600 transition duration-200 hover:bg-yellow-50 hover:text-yellow-600">
+        <Button className="group flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-600 transition duration-200 hover:bg-yellow-50 hover:text-yellow-600">
           <Bookmark size={18} className="transition group-hover:scale-110" />
           <span className="text-sm font-medium">Save</span>
-        </button>
+        </Button>
       </div>
     </div>
   )

@@ -24,7 +24,6 @@ export const CreateComment = async (req, res) => {
             `INSERT INTO comments (text, postId, userId) VALUES (?, ?, ?)`,
             [text, postId, user]
         );
-        console.log(req.cookies)
         await updateUserInterest(user, post[0].category, 3)
 
         return res.status(200).json({ message: 'comment created successfully ', comment: comment[0]});
@@ -57,7 +56,6 @@ export const DeleteComment = async (req, res) => {
             `DELETE FROM comments WHERE id = ?`,
             [commentId]
         )
-
 
         return res.status(200).json({ message: 'comment deleted successfully '});
     } catch (error) {

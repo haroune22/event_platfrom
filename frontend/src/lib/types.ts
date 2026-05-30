@@ -46,6 +46,7 @@ export interface CreatePostData {
 
 export interface CreateCommentData {
   text: string
+  postId: string
 }
 
 export interface Post {
@@ -69,4 +70,20 @@ export interface PostDetails {
   creatorName: string
   profilePic: string
   createdAt: Date
+}
+
+export interface commentData {
+  createdAt: Date
+  name: string
+  id: string
+  postId: string
+  profilePic: string
+  text: string
+  updatedAt: Date
+  userId: string
+}
+
+export interface DeleteComment {
+  postId: string
+  commentId: string
 }

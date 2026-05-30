@@ -1,4 +1,4 @@
-import type { CreateCommentData } from "@/lib/types"
+import type { CreateCommentData, DeleteComment } from "@/lib/types"
 import api from "./axios"
 
 export const fetchComments = async (postId: string) => {
@@ -6,15 +6,14 @@ export const fetchComments = async (postId: string) => {
   return res.data.comments
 }
 
-export const createComment = async (
-  data: CreateCommentData,
-  postId: string
-) => {
-  const res = await api.post(`/posts/${postId}/comments`, data)
+export const createComment = async (data: CreateCommentData) => {
+  const res = await api.post(`/posts/${data.postId}/comment`, data)
   return res.data.comment
 }
 
-export const deletePost = async (postId: string, commentId: string) => {
-  const res = await api.delete(`/posts/${postId}/comment/${commentId}`)
+export const deleteComment = async (data: DeleteComment) => {
+  const res = await api.delete(
+    `/posts/${data.postId}/comment/${data.commentId}`
+  )
   return res.data
 }
