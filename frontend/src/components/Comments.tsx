@@ -31,7 +31,7 @@ const Comments = ({ postId }: CommentsProps) => {
     mutationFn: (credentials: DeleteComment) => deleteComment(credentials),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["fetch-comments"],
+        queryKey: ["fetch-comments", postId],
       })
       console.log("comment delete successfully")
     },

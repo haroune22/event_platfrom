@@ -27,29 +27,32 @@ const CreateComment = ({ postId }: CreateCommentProps) => {
     },
   })
 
-  const sendComment = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (text.length < 1) return
+
+    if (!text.trim()) return
+
     createCommentMutation.mutate({ postId, text })
     setText("")
   }
+
   return (
-    <div className="my-2 flex w-full max-w-xl items-center justify-center">
+    <form onSubmit={handleSubmit} className="my-2 flex w-full max-w-xl">
       <Input
-        placeholder="Write a comment..."
-        className="z-50 h-12 flex-1 rounded-l-2xl rounded-r-none border border-gray-200 bg-gray-100 px-4 py-2 focus-visible:ring-1"
         value={text}
+        className="h-12 flex-1 rounded-l-2xl rounded-r-none border border-gray-200 bg-gray-100 px-4 py-2 focus-visible:ring-1"
         onChange={(e) => setText(e.target.value)}
+        placeholder="Write a comment..."
       />
       <Button
-        onClick={(e) => sendComment(e)}
-        className="h-12 cursor-pointer rounded-l-none rounded-r-2xl bg-blue-600 px-8 py-6.5 text-xl text-white hover:bg-blue-500"
+        className="h-12 cursor-pointer rounded-l-none rounded-r-2xl bg-blue-600 px-8 py-6 text-xl text-white hover:bg-blue-500"
         variant={"default"}
         size={"lg"}
+        type="submit"
       >
         Send
       </Button>
-    </div>
+    </form>
   )
 }
 

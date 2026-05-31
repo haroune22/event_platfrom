@@ -5,6 +5,7 @@ import Home from "./pages/Home"
 import { ProtectedRoutes } from "./components/ProtectedRoutes"
 import { PublicRoute } from "./components/PublicRouter"
 import Post from "./pages/Post"
+import CreatePost from "./pages/CreatePost"
 
 export function App() {
   return (
@@ -20,6 +21,7 @@ export function App() {
         <Route element={<ProtectedRoutes />}>
           <Route path="/" element={<Home />} />
           <Route path="/post/:postId" element={<Post />} />
+          <Route path="/createPost" element={<CreatePost />} />
         </Route>
       </Routes>
     </BrowserRouter>
