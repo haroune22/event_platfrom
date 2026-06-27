@@ -14,7 +14,7 @@ const Home = () => {
     retry: false,
   })
 
-  console.log(posts)
+  // console.log(posts)
   if (isLoading) {
     return <div>Loading...</div>
   }
