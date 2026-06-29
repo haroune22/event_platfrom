@@ -1,4 +1,4 @@
-import type { PostDetails } from "@/lib/types"
+import type { PostDetails, PostTypes } from "@/lib/types"
 import { Label } from "./ui/label"
 import { Input } from "./ui/input"
 import { Textarea } from "./ui/textarea"
@@ -18,14 +18,16 @@ import EventFields from "./EventFields"
 type PostFormProps = {
   post?: PostDetails
   onOpenChange: Dispatch<SetStateAction<boolean>>
-  PostType?: "Post" | "Education" | "Event"
+  PostType?: PostTypes
 }
 
 const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
-  const [type, setType] = useState(post?.type || PostType || "")
-  console.log(type)
+  const [type, setType] = useState<PostTypes | "normal">(
+    post?.type || PostType || "normal"
+  )
+  // console.log(type)
   return (
-    <div className="flex flex-col">
+    <div className="flex h-[85vh] flex-col">
       <div className="border-b bg-gray-50 px-6 py-5">
         <h2 className="text-2xl font-bold text-gray-900">
           {post ? "✏️ Update Post" : "✨ Create Post"}
@@ -35,7 +37,8 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
           Share something with your community.
         </p>
       </div>
-      <form className="space-y-6 p-6">
+
+      <form className="flex-1 space-y-6 overflow-y-auto bg-gray-50 p-6">
         <div className="space-y-2">
           <Label className="font-medium text-gray-700">📝 Title</Label>
           <Input
@@ -48,11 +51,34 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
           <Label className="font-medium text-gray-700">💬 Content</Label>
 
           <Textarea
-            rows={12}
+            rows={8}
             placeholder="What's on your mind?"
             className="h-24 resize-none border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500"
           />
         </div>
+
+        <div className="space-y-2">
+          <Label className="font-medium text-gray-700">Type</Label>
+          <Select
+            value={type}
+            onValueChange={(value) => setType(value as PostTypes)}
+            defaultValue="post"
+          >
+            <SelectTrigger className="w-full border-gray-300">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent position="popper" className="bg-white shadow-lg">
+              <SelectGroup>
+                <SelectItem value="normal">📝 Normal Post</SelectItem>
+                <SelectItem value="education">🎓 Education</SelectItem>
+                <SelectItem value="event">📅 Event</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {type === "education" && <EducationFields />}
+        {type === "event" && <EventFields />}
 
         <div className="space-y-2">
           <Label className="font-medium text-gray-700">🏷️ Category</Label>
@@ -75,28 +101,6 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
         </div>
 
         <div className="space-y-2">
-          <Label className="font-medium text-gray-700">Type</Label>
-          <Select onValueChange={setType} defaultValue="post">
-            <SelectTrigger
-              onChange={(e) => setType(e.target.value)}
-              className="w-full border-gray-300"
-            >
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent position="popper" className="bg-white shadow-lg">
-              <SelectGroup>
-                <SelectItem value="education"> Education</SelectItem>
-                <SelectItem value="post"> Post</SelectItem>
-                <SelectItem value="event"> Event</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {type === "education" && <EducationFields />}
-        {type === "event" && <EventFields />}
-
-        <div className="space-y-2">
           <Label className="font-medium text-gray-700">📷 Media</Label>
 
           <Input
@@ -105,16 +109,16 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
           />
         </div>
       </form>
-      <div className="flex justify-end gap-4 border-t bg-gray-50 px-6 py-4">
+      <div className="flex justify-end gap-3 border-t bg-gray-50 px-6 py-5">
         <Button
           onClick={() => onOpenChange(false)}
           variant="outline"
-          className="cursor-pointer"
+          className="min-w-24 cursor-pointer"
         >
           Cancel
         </Button>
 
-        <Button className="cursor-pointer bg-blue-600 px-6 py-4 text-white hover:bg-blue-700">
+        <Button className="min-w-32 cursor-pointer bg-blue-600 px-6 py-4 text-white hover:bg-blue-700">
           {post ? "Save Changes" : "Create Post"}
         </Button>
       </div>
