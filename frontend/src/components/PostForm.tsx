@@ -11,14 +11,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select"
-import type { Dispatch, SetStateAction } from "react"
+import { useState, type Dispatch, type SetStateAction } from "react"
+import EducationFields from "./EducationFields "
+import EventFields from "./EventFields"
 
 type PostFormProps = {
   post?: PostDetails
   onOpenChange: Dispatch<SetStateAction<boolean>>
+  PostType?: "Post" | "Education" | "Event"
 }
 
-const PostForm = ({ post, onOpenChange }: PostFormProps) => {
+const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
+  const [type, setType] = useState(post?.type || PostType || "")
+  console.log(type)
   return (
     <div className="flex flex-col">
       <div className="border-b bg-gray-50 px-6 py-5">
@@ -30,7 +35,7 @@ const PostForm = ({ post, onOpenChange }: PostFormProps) => {
           Share something with your community.
         </p>
       </div>
-      <form className="space-y-6 p-8">
+      <form className="space-y-6 p-6">
         <div className="space-y-2">
           <Label className="font-medium text-gray-700">📝 Title</Label>
           <Input
@@ -43,9 +48,9 @@ const PostForm = ({ post, onOpenChange }: PostFormProps) => {
           <Label className="font-medium text-gray-700">💬 Content</Label>
 
           <Textarea
-            rows={8}
+            rows={12}
             placeholder="What's on your mind?"
-            className="resize-none border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="h-24 resize-none border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500"
           />
         </div>
 
@@ -56,7 +61,6 @@ const PostForm = ({ post, onOpenChange }: PostFormProps) => {
             <SelectTrigger className="w-full border-gray-300">
               <SelectValue placeholder="Choose a category" />
             </SelectTrigger>
-
             <SelectContent className="bg-white shadow-lg">
               <SelectGroup>
                 <SelectItem value="education">🎓 Education</SelectItem>
@@ -69,6 +73,28 @@ const PostForm = ({ post, onOpenChange }: PostFormProps) => {
             </SelectContent>
           </Select>
         </div>
+
+        <div className="space-y-2">
+          <Label className="font-medium text-gray-700">Type</Label>
+          <Select onValueChange={setType} defaultValue="post">
+            <SelectTrigger
+              onChange={(e) => setType(e.target.value)}
+              className="w-full border-gray-300"
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent position="popper" className="bg-white shadow-lg">
+              <SelectGroup>
+                <SelectItem value="education"> Education</SelectItem>
+                <SelectItem value="post"> Post</SelectItem>
+                <SelectItem value="event"> Event</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {type === "education" && <EducationFields />}
+        {type === "event" && <EventFields />}
 
         <div className="space-y-2">
           <Label className="font-medium text-gray-700">📷 Media</Label>
