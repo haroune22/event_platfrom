@@ -24,6 +24,7 @@ export const PostDetailsCard = ({
   } = useQuery({
     queryKey: ["fetch-post-by-id", post.communityId],
     queryFn: () => fetchCommunityById(post.communityId),
+    enabled: !!post.communityId,  
     retry: false,
   })
 

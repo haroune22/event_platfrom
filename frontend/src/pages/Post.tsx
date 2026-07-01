@@ -17,6 +17,7 @@ const Post = () => {
   } = useQuery({
     queryKey: ["fetch-post-by-id", postId],
     queryFn: () => fetchPostById(postId!),
+    enabled: !!postId,
     retry: false,
   })
 

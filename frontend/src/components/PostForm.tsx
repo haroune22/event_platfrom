@@ -1,4 +1,9 @@
-import type { PostCategory, PostDetails, PostTypes } from "@/lib/types"
+import type {
+  CreatePostData,
+  PostCategory,
+  PostDetails,
+  PostTypes,
+} from "@/lib/types"
 import { Label } from "./ui/label"
 import { Input } from "./ui/input"
 import { Textarea } from "./ui/textarea"
@@ -11,9 +16,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select"
-import { useState, type Dispatch, type SetStateAction } from "react"
+import {
+  useEffect,
+  useMemo,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react"
 import EducationFields from "./EducationFields "
 import EventFields from "./EventFields"
+import { uploadImage } from "@/api/cloudinary"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { createPost } from "@/api/post"
 
 type PostFormProps = {
   post?: PostDetails
@@ -22,24 +36,71 @@ type PostFormProps = {
 }
 
 const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
+  const queryClient = useQueryClient()
+
   const [type, setType] = useState<PostTypes | "normal">(
     post?.type || PostType || "normal"
   )
   const [image, setImage] = useState<File | null>(null)
   const [title, setTitle] = useState<string>(post?.title || "")
+
   const [content, setContent] = useState<string>(post?.content || "")
-  const [category, setCategory] = useState<PostCategory | undefined>(
-    post?.category || undefined
+  const [category, setCategory] = useState<PostCategory>(
+    post?.category || "education"
   )
 
-  console.log(type, title, content, category ,image)
+  const preview = useMemo(() => {
+    if (!image) return null
+    return URL.createObjectURL(image)
+  }, [image])
 
-  const preview = image ? URL.createObjectURL(image) : null
+  console.log(type, title, content, category, image)
 
+  useEffect(() => {
+    return () => {
+      if (preview) {
+        URL.revokeObjectURL(preview)
+      }
+    }
+  }, [preview])
 
+  const createPostMutation = useMutation({
+    mutationFn: (data: CreatePostData) => createPost(data),
+    onSuccess: async (data) => {
+      await queryClient.invalidateQueries({
+        queryKey: ["posts"],
+      })
+      console.log("post created successfully", data)
+    },
+    onError: (error) => {
+      console.log(error)
+    },
+  })
 
-  const handleCreate = () => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
 
+    if (!title.trim()) return
+    if (!content.trim()) return
+
+    let media = ""
+
+    try {
+      if (image) {
+        const imageUrl = await uploadImage(image)
+        media = imageUrl.secure_url
+      }
+
+      createPostMutation.mutate({
+        title,
+        content,
+        media,
+        category,
+        type,
+      })
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
@@ -55,7 +116,8 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
       </div>
 
       <form
-        onSubmit={handleCreate}
+        id="post-form"
+        onSubmit={handleSubmit}
         className="flex-1 space-y-6 overflow-y-auto bg-gray-50 p-6"
       >
         <div className="space-y-2">
@@ -108,12 +170,13 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
 
           <Select
             value={category}
-            onValueChange={(value) => setCategory(value as PostCategory)} 
+            onValueChange={(value) => setCategory(value as PostCategory)}
+            defaultValue="education"
           >
             <SelectTrigger className="w-full border-gray-300">
               <SelectValue placeholder="Choose a category" />
             </SelectTrigger>
-            <SelectContent className="bg-white shadow-lg">
+            <SelectContent position="popper" className="bg-white shadow-lg">
               <SelectGroup>
                 <SelectItem value="education">🎓 Education</SelectItem>
                 <SelectItem value="sports">⚽ Sports</SelectItem>
@@ -151,7 +214,9 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
 
         <Button
           type="submit"
+          form="post-form"
           className="min-w-32 cursor-pointer bg-blue-600 px-6 py-4 text-white hover:bg-blue-700"
+          disabled={createPostMutation.isPending}
         >
           {post ? "Save Changes" : "Create Post"}
         </Button>

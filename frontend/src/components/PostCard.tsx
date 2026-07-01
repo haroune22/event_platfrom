@@ -97,19 +97,6 @@ export const PostCard = ({ post, creatorProfilePic }: PostCardProps) => {
         </div>
       )}
 
-      <div className="border-b border-gray-100 px-4 py-2 text-xs text-gray-600">
-        <div className="flex items-center gap-4">
-          <button className="flex items-center gap-1 transition hover:text-red-600">
-            <Heart size={16} className="fill-current" />
-            <span>1.2K likes</span>
-          </button>
-          <button className="flex items-center gap-1 transition hover:text-blue-600">
-            <MessageCircle size={16} />
-            <span>42 comments</span>
-          </button>
-        </div>
-      </div>
-
       <div className="flex items-center justify-between px-2 py-1">
         <button
           onClick={() => setIsLiked(!isLiked)}

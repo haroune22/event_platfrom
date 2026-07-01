@@ -22,7 +22,7 @@ export const fetchPostById = async (id: string) => {
 }
 
 export const createPost = async (data: CreatePostData) => {
-  const res = await api.post("/posts/create", data)
+  const res = await api.post("/posts", data)
   return res.data
 }
 

@@ -42,6 +42,7 @@ export interface CreatePostData {
   content: string
   category: PostCategory
   type: PostTypes
+  media: string
 }
 
 export interface CreateCommentData {
