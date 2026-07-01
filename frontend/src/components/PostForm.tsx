@@ -1,4 +1,4 @@
-import type { PostDetails, PostTypes } from "@/lib/types"
+import type { PostCategory, PostDetails, PostTypes } from "@/lib/types"
 import { Label } from "./ui/label"
 import { Input } from "./ui/input"
 import { Textarea } from "./ui/textarea"
@@ -25,7 +25,23 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
   const [type, setType] = useState<PostTypes | "normal">(
     post?.type || PostType || "normal"
   )
-  // console.log(type)
+  const [image, setImage] = useState<File | null>(null)
+  const [title, setTitle] = useState<string>(post?.title || "")
+  const [content, setContent] = useState<string>(post?.content || "")
+  const [category, setCategory] = useState<PostCategory | undefined>(
+    post?.category || undefined
+  )
+
+  console.log(type, title, content, category ,image)
+
+  const preview = image ? URL.createObjectURL(image) : null
+
+
+
+  const handleCreate = () => {
+
+  }
+
   return (
     <div className="flex h-[85vh] flex-col">
       <div className="border-b bg-gray-50 px-6 py-5">
@@ -38,10 +54,15 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
         </p>
       </div>
 
-      <form className="flex-1 space-y-6 overflow-y-auto bg-gray-50 p-6">
+      <form
+        onSubmit={handleCreate}
+        className="flex-1 space-y-6 overflow-y-auto bg-gray-50 p-6"
+      >
         <div className="space-y-2">
           <Label className="font-medium text-gray-700">📝 Title</Label>
           <Input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
             placeholder="Give your post a title..."
             className="h-11 border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500"
           />
@@ -51,6 +72,8 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
           <Label className="font-medium text-gray-700">💬 Content</Label>
 
           <Textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
             rows={8}
             placeholder="What's on your mind?"
             className="h-24 resize-none border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500"
@@ -83,7 +106,10 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
         <div className="space-y-2">
           <Label className="font-medium text-gray-700">🏷️ Category</Label>
 
-          <Select>
+          <Select
+            value={category}
+            onValueChange={(value) => setCategory(value as PostCategory)} 
+          >
             <SelectTrigger className="w-full border-gray-300">
               <SelectValue placeholder="Choose a category" />
             </SelectTrigger>
@@ -100,13 +126,18 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
           </Select>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-4">
           <Label className="font-medium text-gray-700">📷 Media</Label>
 
           <Input
             type="file"
             className="cursor-pointer border-gray-300 file:mr-3 file:rounded-md file:border-0 file:bg-blue-50 file:px-3 file:py-2 file:text-blue-700 hover:file:bg-blue-100"
+            onChange={(e) => setImage(e.target.files?.[0] ?? null)}
           />
+
+          {preview && (
+            <img src={preview} alt="Preview" className="rounded-xl" />
+          )}
         </div>
       </form>
       <div className="flex justify-end gap-3 border-t bg-gray-50 px-6 py-5">
@@ -118,7 +149,10 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
           Cancel
         </Button>
 
-        <Button className="min-w-32 cursor-pointer bg-blue-600 px-6 py-4 text-white hover:bg-blue-700">
+        <Button
+          type="submit"
+          className="min-w-32 cursor-pointer bg-blue-600 px-6 py-4 text-white hover:bg-blue-700"
+        >
           {post ? "Save Changes" : "Create Post"}
         </Button>
       </div>
