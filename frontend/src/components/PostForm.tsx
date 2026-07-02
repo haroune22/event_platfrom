@@ -29,6 +29,8 @@ import EventFields from "./EventFields"
 import { uploadImage } from "@/api/cloudinary"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { createPost, updatePost } from "@/api/post"
+import { toast } from "sonner"
+
 
 type PostFormProps = {
   post?: PostDetails
@@ -71,8 +73,9 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
     mutationFn: (data: CreatePostData) => createPost(data),
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({
-        queryKey: ["fetch-post-by-id", post?.id],
+        queryKey: ["posts", post?.id],
       })
+      toast.success("Post created successfully")
       console.log("post created successfully", data)
     },
     onError: (error) => {
@@ -84,8 +87,9 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
     mutationFn: (data: UpdatePostData) => updatePost(data),
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({
-        queryKey: ["posts"],
+        queryKey: ["fetch-post-by-id", post?.id],
       })
+      toast.success("Post updated successfully")
       console.log("post updated successfully", data)
     },
     onError: (error) => {

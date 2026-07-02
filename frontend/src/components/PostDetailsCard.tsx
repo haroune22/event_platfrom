@@ -9,13 +9,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react"
+import { MoreVertical, Pencil } from "lucide-react"
 
 import type { PostDetails } from "@/lib/types"
 import { Bookmark, Heart, MessageCircle, Share2 } from "lucide-react"
 import { fetchCommunityById } from "@/api/community"
 import { Button } from "./ui/button"
 import CreatePostDialog from "./CreatePostDialog"
+import { useAuth } from "@/hooks/useAuth"
+import DeletePostDialog from "./DeletePostDialog"
 
 type PostDetailsCardProps = {
   post: PostDetails
@@ -26,6 +28,9 @@ export const PostDetailsCard = ({
   post,
   setShowComments,
 }: PostDetailsCardProps) => {
+
+  const { user } = useAuth()
+
   const [isLiked, setIsLiked] = useState(false)
   const [openUpdatePost, setOpenUpdatePost] = useState(false)
   const {
@@ -80,7 +85,7 @@ export const PostDetailsCard = ({
               )}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex  items-center gap-2">
             <span className="text-base text-gray-400">
               {format(new Date(post.createdAt), "MMM dd, yyyy")}
             </span>
@@ -98,25 +103,24 @@ export const PostDetailsCard = ({
               {post.type === "normal" && "💬 Discussion"}
             </span>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <MoreHorizontal className="h-5 w-5" />
-                </Button>
-              </DropdownMenuTrigger>
+            {user?.id === post.userId && (
+              <DropdownMenu >
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <MoreVertical className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
 
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent className="bg-white" align="end">
                 <DropdownMenuItem onClick={() => setOpenUpdatePost(true)}>
                   <Pencil className="mr-2 h-4 w-4" />
                   Edit
                 </DropdownMenuItem>
-
-                <DropdownMenuItem className="text-red-600">
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  Delete
-                </DropdownMenuItem>
+                <DeletePostDialog postId={post.id} />
               </DropdownMenuContent>
             </DropdownMenu>
+          )}
+
           </div>
         </div>
 

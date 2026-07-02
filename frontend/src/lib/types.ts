@@ -73,6 +73,7 @@ export interface PostDetails {
   creatorName: string
   profilePic: string
   createdAt: Date
+  userId?: string
 }
 
 export interface commentData {
