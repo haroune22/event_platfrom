@@ -3,6 +3,7 @@ import type {
   PostCategory,
   PostDetails,
   PostTypes,
+  UpdatePostData,
 } from "@/lib/types"
 import { Label } from "./ui/label"
 import { Input } from "./ui/input"
@@ -27,7 +28,7 @@ import EducationFields from "./EducationFields "
 import EventFields from "./EventFields"
 import { uploadImage } from "@/api/cloudinary"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { createPost } from "@/api/post"
+import { createPost, updatePost } from "@/api/post"
 
 type PostFormProps = {
   post?: PostDetails
@@ -42,6 +43,7 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
     post?.type || PostType || "normal"
   )
   const [image, setImage] = useState<File | null>(null)
+
   const [title, setTitle] = useState<string>(post?.title || "")
 
   const [content, setContent] = useState<string>(post?.content || "")
@@ -54,6 +56,7 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
     return URL.createObjectURL(image)
   }, [image])
 
+  const displayImage = preview || post?.media || ""
   console.log(type, title, content, category, image)
 
   useEffect(() => {
@@ -68,9 +71,22 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
     mutationFn: (data: CreatePostData) => createPost(data),
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({
-        queryKey: ["posts"],
+        queryKey: ["fetch-post-by-id", post?.id],
       })
       console.log("post created successfully", data)
+    },
+    onError: (error) => {
+      console.log(error)
+    },
+  })
+
+  const updatePostMutation = useMutation({
+    mutationFn: (data: UpdatePostData) => updatePost(data),
+    onSuccess: async (data) => {
+      await queryClient.invalidateQueries({
+        queryKey: ["posts"],
+      })
+      console.log("post updated successfully", data)
     },
     onError: (error) => {
       console.log(error)
@@ -83,24 +99,36 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
     if (!title.trim()) return
     if (!content.trim()) return
 
-    let media = ""
+    let media = post?.media ?? ""
+
+    if (image) {
+      const imageUrl = await uploadImage(image)
+      media = imageUrl.secure_url
+    } 
 
     try {
-      if (image) {
-        const imageUrl = await uploadImage(image)
-        media = imageUrl.secure_url
+      if (post) {
+        await updatePostMutation.mutate({
+          id: post.id,
+          title,
+          content,
+          media,
+          category,
+          type,
+        })
+      } else {
+        await createPostMutation.mutate({
+          title,
+          content,
+          media,
+          category,
+          type,
+        })
       }
-
-      createPostMutation.mutate({
-        title,
-        content,
-        media,
-        category,
-        type,
-      })
+       onOpenChange(false)
     } catch (error) {
-      console.error(error)
-    }
+      console.log(error)
+    } 
   }
 
   return (
@@ -126,7 +154,7 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Give your post a title..."
-            className="h-11 border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="h-11 max-w-80 border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500"
           />
         </div>
 
@@ -138,7 +166,7 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
             onChange={(e) => setContent(e.target.value)}
             rows={8}
             placeholder="What's on your mind?"
-            className="h-24 resize-none border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="h-24 max-w-80 resize-none border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500"
           />
         </div>
 
@@ -198,8 +226,8 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
             onChange={(e) => setImage(e.target.files?.[0] ?? null)}
           />
 
-          {preview && (
-            <img src={preview} alt="Preview" className="rounded-xl" />
+          {displayImage && (
+            <img src={displayImage} alt="Preview" className="rounded-xl" />
           )}
         </div>
       </form>

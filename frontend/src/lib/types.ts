@@ -32,8 +32,10 @@ export type PostCategory =
   | "movies"
 
 export interface UpdatePostData {
+  id: string
   title: string
   content: string
+  type?: PostTypes
   media: string
   category: PostCategory
 }
