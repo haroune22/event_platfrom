@@ -73,7 +73,7 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
     mutationFn: (data: CreatePostData) => createPost(data),
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({
-        queryKey: ["posts", post?.id],
+        queryKey: ["posts"],
       })
       toast.success("Post created successfully")
       console.log("post created successfully", data)
@@ -112,7 +112,7 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
 
     try {
       if (post) {
-        await updatePostMutation.mutate({
+        updatePostMutation.mutate({
           id: post.id,
           title,
           content,
@@ -121,7 +121,7 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
           type,
         })
       } else {
-        await createPostMutation.mutate({
+        createPostMutation.mutate({
           title,
           content,
           media,

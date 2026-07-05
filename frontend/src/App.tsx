@@ -5,6 +5,7 @@ import Home from "./pages/Home"
 import { ProtectedRoutes } from "./components/ProtectedRoutes"
 import { PublicRoute } from "./components/PublicRouter"
 import Post from "./pages/Post"
+import Feed from "./pages/Feed"
 
 export function App() {
   return (
@@ -19,6 +20,7 @@ export function App() {
         {/* Protected Routes */}
         <Route element={<ProtectedRoutes />}>
           <Route path="/" element={<Home />} />
+          <Route path="/feed" element={<Feed />} />
           <Route path="/post/:postId" element={<Post />} />
         </Route>
       </Routes>

@@ -10,6 +10,8 @@ type createPostDialogProps = {
   PostType?: PostTypes
 }
 
+//changing the name later to PostDialog to be more generic and reusable for both creating and updating posts
+
 const CreatePostDialog = ({
   openDialog,
   onOpenChange,

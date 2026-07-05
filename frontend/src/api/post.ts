@@ -8,7 +8,7 @@ export const fetchPosts = async () => {
 
 export const fetchFeedPosts = async () => {
   const res = await api.get("/posts/feed")
-  return res.data.posts
+  return res.data.data
 }
 
 export const fetchPostByCat = async (category: string) => {
