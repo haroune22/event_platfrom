@@ -91,3 +91,25 @@ export interface DeleteComment {
   postId: string
   commentId: string
 }
+
+
+export interface CreateEventData {
+  title: string
+  content: string
+  category: PostCategory
+  type: PostTypes
+  media: string
+  date: Date
+  max_participants: number
+}
+
+export interface UpdateEventData {
+  id: string
+  title: string
+  content: string
+  category: PostCategory
+  type?: PostTypes
+  media: string
+  date: Date
+  max_participants: number
+}

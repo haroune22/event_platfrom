@@ -6,6 +6,7 @@ import { ProtectedRoutes } from "./components/ProtectedRoutes"
 import { PublicRoute } from "./components/PublicRouter"
 import Post from "./pages/Post"
 import Feed from "./pages/Feed"
+import Event from "./pages/Event"
 
 export function App() {
   return (
@@ -21,6 +22,7 @@ export function App() {
         <Route element={<ProtectedRoutes />}>
           <Route path="/" element={<Home />} />
           <Route path="/feed" element={<Feed />} />
+          <Route path="/events" element={<Event />} />
           <Route path="/post/:postId" element={<Post />} />
         </Route>
       </Routes>
