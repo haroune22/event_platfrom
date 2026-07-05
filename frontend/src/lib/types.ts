@@ -22,6 +22,7 @@ export interface RegisterData {
 }
 
 export type PostTypes = "normal" | "event" | "education"
+export type PostLevels = "beginner" | "intermediate" | "advanced"
 
 export type PostCategory =
   | "sports"
@@ -60,6 +61,7 @@ export interface Post {
   media: string
   category: PostCategory
   creatorName: string
+  profilePic: string | null
   createdAt: Date
 }
 export interface PostDetails {
@@ -74,6 +76,10 @@ export interface PostDetails {
   profilePic: string
   createdAt: Date
   userId?: string
+  eventDate?: Date
+  maxParticipants?: number
+  level?: PostLevels
+  extraLinks?: string
 }
 
 export interface commentData {
@@ -92,6 +98,19 @@ export interface DeleteComment {
   commentId: string
 }
 
+export interface Event {
+  id: string
+  title: string
+  content: string
+  type: PostTypes
+  media: string
+  category: PostCategory
+  name: string
+  profilePic: string | null
+  date: Date
+  max_participants: number
+  createdAt: Date
+}
 
 export interface CreateEventData {
   title: string

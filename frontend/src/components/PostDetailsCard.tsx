@@ -28,9 +28,10 @@ export const PostDetailsCard = ({
   post,
   setShowComments,
 }: PostDetailsCardProps) => {
-
   const { user } = useAuth()
 
+  console.log(post)
+  
   const [isLiked, setIsLiked] = useState(false)
   const [openUpdatePost, setOpenUpdatePost] = useState(false)
   const {
@@ -85,7 +86,7 @@ export const PostDetailsCard = ({
               )}
             </p>
           </div>
-          <div className="flex  items-center gap-2">
+          <div className="flex items-center gap-2">
             <span className="text-base text-gray-400">
               {format(new Date(post.createdAt), "MMM dd, yyyy")}
             </span>
@@ -104,28 +105,84 @@ export const PostDetailsCard = ({
             </span>
 
             {user?.id === post.userId && (
-              <DropdownMenu >
+              <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon">
                     <MoreVertical className="h-5 w-5" />
                   </Button>
                 </DropdownMenuTrigger>
 
-              <DropdownMenuContent className="bg-white" align="end">
-                <DropdownMenuItem onClick={() => setOpenUpdatePost(true)}>
-                  <Pencil className="mr-2 h-4 w-4" />
-                  Edit
-                </DropdownMenuItem>
-                <DeletePostDialog postId={post.id} />
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-
+                <DropdownMenuContent className="bg-white" align="end">
+                  <DropdownMenuItem onClick={() => setOpenUpdatePost(true)}>
+                    <Pencil className="mr-2 h-4 w-4" />
+                    Edit
+                  </DropdownMenuItem>
+                  <DeletePostDialog postId={post.id} />
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
         </div>
 
         <div className="mt-4 flex flex-col gap-2">
           <p className="text-base">{post.content}</p>
+          {post.type === "event" && (
+            <div className="grid gap-3 rounded-xl border border-orange-200 bg-orange-50 p-4 sm:grid-cols-2">
+              <div>
+                <p className="text-xs font-semibold tracking-wide text-orange-600 uppercase">
+                  📅 Scheduled Date
+                </p>
+                <p className="mt-1 text-sm font-medium text-gray-800">
+                  {post.eventDate
+                    ? format(new Date(post.eventDate), "PPP 'at' p")
+                    : "Not specified"}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-xs font-semibold tracking-wide text-orange-600 uppercase">
+                  👥 Max Participants
+                </p>
+                <p className="mt-1 text-sm font-medium text-gray-800">
+                  {post.maxParticipants ?? "Unlimited"}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {post.type === "education" && (
+            <div className="grid gap-3 rounded-xl border border-green-200 bg-green-50 p-4 sm:grid-cols-2">
+              <div>
+                <p className="text-xs font-semibold tracking-wide text-green-600 uppercase">
+                  🎯 Level
+                </p>
+                <p className="mt-1 text-sm font-medium text-gray-800 capitalize">
+                  {post.level ?? "Not specified"}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-xs font-semibold tracking-wide text-green-600 uppercase">
+                  🔗 Resources
+                </p>
+
+                {post.extraLinks ? (
+                  <a
+                    href={post?.extraLinks}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-1 block truncate text-sm font-medium text-blue-600 hover:underline"
+                  >
+                    Open Resource
+                  </a>
+                ) : (
+                  <p className="mt-1 text-sm text-gray-500">
+                    No resources provided.
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
           {post.media && (
             <img
               src={post.media}
@@ -178,7 +235,13 @@ export const PostDetailsCard = ({
           </Button>
         </div>
       </div>
-      {openUpdatePost && <CreatePostDialog post={post} onOpenChange={setOpenUpdatePost} openDialog={openUpdatePost}/>}
+      {openUpdatePost && (
+        <CreatePostDialog
+          post={post}
+          onOpenChange={setOpenUpdatePost}
+          openDialog={openUpdatePost}
+        />
+      )}
     </>
   )
 }

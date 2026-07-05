@@ -16,8 +16,8 @@ export const SideBar = () => {
       icon: <TrendingUp size={20} />,
     },
     {
-      name: "Events",
-      path: "/events",
+      name: "Event",
+      path: "/event",
       icon: <Calendar size={20} />,
     },
     {

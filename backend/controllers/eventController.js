@@ -111,7 +111,7 @@ export const GetEvents = async (req, res) => {
             values
         )
 
-        return res.status(200).json({ message: 'events found', events: events})
+        return res.status(200).json({ message: 'events found', events})
 
     } catch (error) {
         console.log(error);
