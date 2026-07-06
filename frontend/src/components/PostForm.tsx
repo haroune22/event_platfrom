@@ -1,9 +1,7 @@
 import type {
-  CreatePostData,
   PostCategory,
   PostDetails,
   PostTypes,
-  UpdatePostData,
 } from "@/lib/types"
 import { Label } from "./ui/label"
 import { Input } from "./ui/input"
@@ -27,9 +25,7 @@ import {
 import EducationFields from "./EducationFields "
 import EventFields from "./EventFields"
 import { uploadImage } from "@/api/cloudinary"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { createPost, updatePost } from "@/api/post"
-import { toast } from "sonner"
+import { usePostMutations } from "@/hooks/usePostMutations"
 
 type PostFormProps = {
   post?: PostDetails
@@ -38,7 +34,6 @@ type PostFormProps = {
 }
 
 const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
-  const queryClient = useQueryClient()
 
   const [type, setType] = useState<PostTypes | "normal">(
     post?.type || PostType || "normal"
@@ -64,7 +59,17 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
   }, [image])
 
   const displayImage = preview || post?.media || ""
-  console.log(type, title, content, category, image, level, eventDate, extraLinks, maxParticipants)
+  console.log(
+    type,
+    title,
+    content,
+    category,
+    image,
+    level,
+    eventDate,
+    extraLinks,
+    maxParticipants
+  )
 
   useEffect(() => {
     return () => {
@@ -74,33 +79,7 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
     }
   }, [preview])
 
-  const createPostMutation = useMutation({
-    mutationFn: (data: CreatePostData) => createPost(data),
-    onSuccess: async (data) => {
-      await queryClient.invalidateQueries({
-        queryKey: ["posts"],
-      })
-      toast.success("Post created successfully")
-      console.log("post created successfully", data)
-    },
-    onError: (error) => {
-      console.log(error)
-    },
-  })
-
-  const updatePostMutation = useMutation({
-    mutationFn: (data: UpdatePostData) => updatePost(data),
-    onSuccess: async (data) => {
-      await queryClient.invalidateQueries({
-        queryKey: ["fetch-post-by-id", post?.id],
-      })
-      toast.success("Post updated successfully")
-      console.log("post updated successfully", data)
-    },
-    onError: (error) => {
-      console.log(error)
-    },
-  })
+  const { createPostMutation, updatePostMutation } = usePostMutations(post)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
