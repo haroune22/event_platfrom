@@ -1,3 +1,4 @@
+
 import { fetchEventById } from "@/api/events"
 import Comments from "@/components/Comments"
 import CreateComment from "@/components/CreateComment"
@@ -15,13 +16,13 @@ const Event = () => {
     error,
     isLoading,
   } = useQuery({
-    queryKey: ["fetch-event-by-id", eventId],
+    queryKey: ["fetch_event_by_id", eventId],
     queryFn: () => fetchEventById(eventId!),
-    enabled: !!eventId,
     retry: false,
   })
 
-  console.log(event)
+  console.log(event, isLoading, error)
+
   if (isLoading) {
     return <div>Loading...</div>
   }
@@ -33,9 +34,9 @@ const Event = () => {
   return (
     <div className="mx-auto flex min-h-full max-w-2xl flex-col items-center justify-center rounded-lg border border-gray-100 bg-white shadow-sm">
       <PostDetailsCard setShowComments={setShowComments} post={event} />
+      <CreateComment postId={event.id} />
       {showComments && (
         <>
-          <CreateComment postId={event.id} />
           <Comments postId={event.id} />
         </>
       )}

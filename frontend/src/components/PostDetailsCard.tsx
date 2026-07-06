@@ -30,7 +30,7 @@ export const PostDetailsCard = ({
 }: PostDetailsCardProps) => {
   const { user } = useAuth()
 
-  console.log(post)
+  // console.log(post)
   
   const [isLiked, setIsLiked] = useState(false)
   const [openUpdatePost, setOpenUpdatePost] = useState(false)

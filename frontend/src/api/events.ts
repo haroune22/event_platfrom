@@ -14,12 +14,12 @@ export const fetchFeedEvents = async () => {
 
 export const fetchEventByCat = async (category: string) => {
   const res = await api.get(`/events/category/${category}`)
-  return res.data.Events
+  return res.data.events
 }
 
 export const fetchEventById = async (id: string) => {
   const res = await api.get(`/events/${id}`)
-  return res.data.Event
+  return res.data.event
 }
 
 export const createEvent = async (data: CreateEventData) => {
@@ -29,7 +29,7 @@ export const createEvent = async (data: CreateEventData) => {
 
 export const updateEvent = async (data: UpdateEventData) => {
   const res = await api.put(`/events/${data.id}`, data)
-  return res.data.Event
+  return res.data.event
 }
 
 export const deleteEvent = async (id: string) => {

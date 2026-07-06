@@ -67,7 +67,7 @@ export const GetEvents = async (req, res) => {
 
     try {
         let query = 
-        `SELECT p.*, u.name, u.profilePic, e.eventDate
+        `SELECT e.id AS eventId, e.eventDate, e.maxParticipants, p.*, u.name AS creatorName, u.profilePic
         FROM posts p
         JOIN users u ON p.userId = u.id
         JOIN events e ON p.id = e.postId
@@ -128,7 +128,7 @@ export const GetEvent = async (req, res) => {
     try {
 
         const [event] = await db.query(
-            `SELECT e.*, p.*, u.name, u.profilePic
+            `SELECT e.id AS eventId, e.eventDate, e.maxParticipants, p.*, u.name AS creatorName, u.profilePic
             FROM events e
             JOIN posts p ON e.postId = p.id
             JOIN users u ON p.userId = u.id
@@ -140,7 +140,7 @@ export const GetEvent = async (req, res) => {
         if (event.length === 0) {
             return res.status(404).json({ message: "event not found" });
         }
-
+        // console.log(event)
         
         return res.status(200).json({ message: 'event retrieved', event: event[0]});
 
@@ -152,6 +152,7 @@ export const GetEvent = async (req, res) => {
 
 
 export const UpdateEvent = async (req, res) => {
+
     const user = req.user.id
     const id = req.params.id
     const { title, content, media, category, eventDate } = req.body;

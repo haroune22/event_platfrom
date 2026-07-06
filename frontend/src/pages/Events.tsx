@@ -26,7 +26,7 @@ const Events = () => {
   return (
     <div>
       {events?.map((event: Event) => (
-        <PostCard event={event} key={event.id} />
+        <PostCard post={event} key={event.id} />
       ))}
     </div>
   )

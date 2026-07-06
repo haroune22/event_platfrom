@@ -31,7 +31,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { createPost, updatePost } from "@/api/post"
 import { toast } from "sonner"
 
-
 type PostFormProps = {
   post?: PostDetails
   onOpenChange: Dispatch<SetStateAction<boolean>>
@@ -53,13 +52,19 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
     post?.category || "education"
   )
 
+  const [eventDate, setEventDate] = useState("")
+  const [maxParticipants, setMaxParticipants] = useState(0)
+
+  const [level, setLevel] = useState("beginner")
+  const [extraLinks, setExtraLinks] = useState("")
+
   const preview = useMemo(() => {
     if (!image) return null
     return URL.createObjectURL(image)
   }, [image])
 
   const displayImage = preview || post?.media || ""
-  console.log(type, title, content, category, image)
+  console.log(type, title, content, category, image, level, eventDate, extraLinks, maxParticipants)
 
   useEffect(() => {
     return () => {
@@ -108,7 +113,7 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
     if (image) {
       const imageUrl = await uploadImage(image)
       media = imageUrl.secure_url
-    } 
+    }
 
     try {
       if (post) {
@@ -129,10 +134,10 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
           type,
         })
       }
-       onOpenChange(false)
+      onOpenChange(false)
     } catch (error) {
       console.log(error)
-    } 
+    }
   }
 
   return (
@@ -194,8 +199,22 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
           </Select>
         </div>
 
-        {type === "education" && <EducationFields />}
-        {type === "event" && <EventFields />}
+        {type === "education" && (
+          <EducationFields
+            level={level}
+            setLevel={setLevel}
+            extraLinks={extraLinks}
+            setExtraLinks={setExtraLinks}
+          />
+        )}
+        {type === "event" && (
+          <EventFields
+            eventDate={eventDate}
+            setEventDate={setEventDate}
+            maxParticipants={maxParticipants}
+            setMaxParticipants={setMaxParticipants}
+          />
+        )}
 
         <div className="space-y-2">
           <Label className="font-medium text-gray-700">🏷️ Category</Label>

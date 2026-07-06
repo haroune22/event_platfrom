@@ -8,15 +8,22 @@ import {
 import { formatDistanceToNow } from "date-fns"
 import { Link } from "react-router-dom"
 import { useState } from "react"
-import type { Event } from "@/lib/types"
+import type { Post } from "@/lib/types"
 
-interface eventCardProps {
-  event: Event
+interface postCardProps {
+  post: Post
 }
 
-export const PostCard = ({ event }: eventCardProps) => {
+export const PostCard = ({ post }: postCardProps) => {
   const [isLiked, setIsLiked] = useState(false)
-  const creatorProfilePic = event?.profilePic
+  const creatorProfilePic = post?.profilePic
+
+  const postLink =
+  post.type === "event"
+    ? `/event/${post.eventId}`
+    : post.type === "education"
+      ? `/education/${post.educationId}`
+      : `/post/${post.id}`;
 
   return (
     <article className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition duration-200 hover:shadow-md">
@@ -25,27 +32,27 @@ export const PostCard = ({ event }: eventCardProps) => {
           {creatorProfilePic ? (
             <img
               src={creatorProfilePic}
-              alt={event.name}
+              alt={post.creatorName}
               className="h-10 w-10 shrink-0 rounded-full object-cover"
             />
           ) : (
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-blue-400 to-indigo-600 text-sm font-semibold text-white">
-              {event.name?.charAt(0).toUpperCase()}
+              {post.creatorName?.charAt(0).toUpperCase()}
             </div>
           )}
 
           <div className="flex min-w-0 flex-1 flex-col gap-1">
             <div className="flex items-center gap-2">
               <span className="truncate text-sm font-semibold text-gray-900">
-                {event.name}
+                {post.creatorName}
               </span>
               <span className="text-xs text-gray-500">in</span>
               <span className="truncate text-xs font-medium text-blue-600">
-                r/{event.category}
+                r/{post.category}
               </span>
             </div>
             <span className="text-xs text-gray-500">
-              {formatDistanceToNow(new Date(event.createdAt), {
+              {formatDistanceToNow(new Date(post.createdAt), {
                 addSuffix: true,
               })}
             </span>
@@ -58,41 +65,41 @@ export const PostCard = ({ event }: eventCardProps) => {
       </div>
 
       <Link
-        to={`/post/${event.id}`}
+        to={postLink}
         className="block px-4 pb-3 transition hover:opacity-85"
       >
         <h2 className="mb-2 line-clamp-2 text-base font-bold text-gray-900">
-          {event.title}
+          {post.title}
         </h2>
-        <p className="line-clamp-2 text-sm text-gray-600">{event.content}</p>
+        <p className="line-clamp-2 text-sm text-gray-600">{post.content}</p>
       </Link>
 
-      {event.media && (
-        <Link to={`/event/${event.id}`} className="block">
+      {post.media && (
+        <Link to={postLink} className="block">
           <div className="relative overflow-hidden bg-gray-100">
             <img
-              src={event.media}
-              alt={event.title}
+              src={post.media}
+              alt={post.title}
               className="h-auto max-h-125 w-full object-cover transition duration-200 hover:brightness-95"
             />
           </div>
         </Link>
       )}
 
-      {!event.media && (
+      {!post.media && (
         <div className="px-4 pt-3 pb-2">
           <span
             className={`rounded-full px-3 py-1 text-xs font-semibold ${
-              event.type === "event"
+              post.type === "normal"
                 ? "bg-orange-100 text-orange-700"
-                : event.type === "education"
+                : post.type === "education"
                   ? "bg-green-100 text-green-700"
                   : "bg-blue-100 text-blue-700"
             }`}
           >
-            {event.type === "event" && "📅 Event"}
-            {event.type === "education" && "📚 Education"}
-            {event.type === "normal" && "💬 Discussion"}
+            {post.type === "normal" && "📅 post"}
+            {post.type === "education" && "📚 Education"}
+            {post.type === "normal" && "💬 Discussion"}
           </span>
         </div>
       )}
@@ -116,7 +123,7 @@ export const PostCard = ({ event }: eventCardProps) => {
         </button>
 
         <Link
-          to={`/event/${event.id}`}
+          to={`/post/${post.id}`}
           className="group flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-600 transition duration-200 hover:bg-gray-100 hover:text-blue-600"
         >
           <MessageCircle

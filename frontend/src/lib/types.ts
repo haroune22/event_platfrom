@@ -55,6 +55,8 @@ export interface CreateCommentData {
 
 export interface Post {
   id: string
+  eventId?: string
+  educationId?: string
   title: string
   content: string
   type: PostTypes
@@ -62,6 +64,8 @@ export interface Post {
   category: PostCategory
   creatorName: string
   profilePic: string | null
+  date?: Date
+  max_participants?: number
   createdAt: Date
 }
 export interface PostDetails {
@@ -105,7 +109,7 @@ export interface Event {
   type: PostTypes
   media: string
   category: PostCategory
-  name: string
+  creatorName: string
   profilePic: string | null
   date: Date
   max_participants: number

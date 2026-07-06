@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { type Dispatch, type SetStateAction } from "react"
 import { Input } from "./ui/input"
 import { Label } from "./ui/label"
 import { Button } from "@/components/ui/button"
@@ -11,9 +11,19 @@ import {
 import { ChevronDownIcon } from "lucide-react"
 import { format } from "date-fns"
 
-const EventFields = () => {
-  const [date, setDate] = useState<Date>()
+type EventFieldsProps = {
+  eventDate: string
+  setEventDate: Dispatch<SetStateAction<string>>
+  maxParticipants: number
+  setMaxParticipants: Dispatch<SetStateAction<number>>
+}
 
+const EventFields = ({
+  eventDate,
+  setEventDate,
+  maxParticipants,
+  setMaxParticipants,
+}: EventFieldsProps) => {
   return (
     <>
       <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-5">
@@ -22,39 +32,52 @@ const EventFields = () => {
           Create an event with a date and participant limit.
         </p>
       </div>
+
       <Popover>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            data-empty={!date}
-            className="data-[empty=true]:text-muted-foreground w-53 justify-between text-left font-normal"
+            className="w-53 justify-between text-left font-normal"
           >
-            {date ? format(date, "PPP") : <span>Pick a date</span>}
+            {eventDate ? (
+              format(new Date(eventDate), "PPP")
+            ) : (
+              <span>Pick a date</span>
+            )}
             <ChevronDownIcon />
           </Button>
         </PopoverTrigger>
+
         <PopoverContent
           align="start"
           className="z-50 w-auto rounded-xl border bg-white p-0 shadow-xl"
         >
           <Calendar
             mode="single"
-            selected={date}
-            onSelect={setDate}
-            defaultMonth={date}
+            selected={eventDate ? new Date(eventDate) : undefined}
+            onSelect={(date) => {
+              if (date) {
+                setEventDate(date.toISOString())
+              }
+            }}
           />
         </PopoverContent>
       </Popover>
-      <div className="flex gap-4">
+
+      <div className="flex items-center gap-4">
         <Label className="text-md font-medium text-gray-700">
           Max participants:
         </Label>
+
         <Input
-          max={20}
-          min={1}
-          defaultValue={1}
           type="number"
-          className="h-10 max-w-20 border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500"
+          min={1}
+          max={1000}
+          value={maxParticipants}
+          onChange={(e) =>
+            setMaxParticipants(Number(e.target.value))
+          }
+          className="h-10 max-w-24 border-gray-300"
         />
       </div>
     </>
