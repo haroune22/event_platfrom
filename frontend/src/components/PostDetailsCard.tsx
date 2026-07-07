@@ -117,7 +117,7 @@ export const PostDetailsCard = ({
                     <Pencil className="mr-2 h-4 w-4" />
                     Edit
                   </DropdownMenuItem>
-                  <DeletePostDialog postId={post.id} />
+                  <DeletePostDialog post={post} />
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
@@ -229,9 +229,11 @@ export const PostDetailsCard = ({
             <span className="text-sm font-medium">Share</span>
           </Button>
 
-          <Button className="group flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-600 transition duration-200 hover:bg-yellow-50 hover:text-yellow-600">
+          <Button className="group cursor-pointer flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-600 transition duration-200 hover:bg-yellow-50 hover:text-yellow-600">
             <Bookmark size={18} className="transition group-hover:scale-110" />
-            <span className="text-sm font-medium">Save</span>
+            <span className="text-sm font-medium">
+              {post?.type === "event" ? "Attend" : "Save"}
+            </span>
           </Button>
         </div>
       </div>

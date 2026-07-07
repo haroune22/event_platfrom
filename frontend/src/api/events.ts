@@ -29,7 +29,7 @@ export const createEvent = async (data: CreateEventData) => {
 
 export const updateEvent = async (data: UpdateEventData) => {
   const res = await api.put(`/events/${data.id}`, data)
-  return res.data.event
+  return res.data
 }
 
 export const deleteEvent = async (id: string) => {

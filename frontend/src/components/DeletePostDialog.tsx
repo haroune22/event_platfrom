@@ -1,4 +1,4 @@
-import { deletePost } from "@/api/post"
+
 import { Button } from "@/components/ui/button"
 import {
   AlertDialog,
@@ -11,40 +11,28 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Trash2 } from "lucide-react"
-import { toast } from "sonner"
-import { useNavigate } from "react-router-dom"
+
+import type { PostDetails } from "@/lib/types"
+import { usePostMutations } from "@/hooks/usePostMutations"
 
 type DeletePostDialogProps = {
-  postId: string
+  post: PostDetails
 }
 
-const DeletePostDialog = ({ postId }: DeletePostDialogProps) => {
-  const navigate = useNavigate()
-  const queryClient = useQueryClient()
+const DeletePostDialog = ({ post }: DeletePostDialogProps) => {
 
-  const deleteMutation = useMutation({
-    mutationFn: deletePost,
 
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ["posts"],
-      })
-
-      toast.success("Post deleted successfully 🗑️")
-
-      navigate("/")
-    },
-
-    onError: () => {
-      toast.error("Failed to delete post.")
-    },
-  })
+  const { deleteEventMutation, deletePostMutation } = usePostMutations()
 
   const handleDeletePost = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    deleteMutation.mutate(postId)
+    if(post.type === 'event'){
+      deleteEventMutation.mutate(post?.eventId ?? post.id)
+    }else {
+      deletePostMutation.mutate(post.id)
+    }
+
   }
 
   return (
@@ -81,10 +69,10 @@ const DeletePostDialog = ({ postId }: DeletePostDialogProps) => {
 
           <AlertDialogAction
             onClick={(e) => handleDeletePost(e)}
-            disabled={deleteMutation.isPending}
+            disabled={deletePostMutation.isPending}
             className="cursor-pointer text-white bg-red-600 hover:bg-red-700"
           >
-            {deleteMutation.isPending ? "Deleting..." : "Delete Post"}
+            {deleteEventMutation.isPending ? "Deleting..." : "Delete Post"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

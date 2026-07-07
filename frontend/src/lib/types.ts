@@ -64,12 +64,16 @@ export interface Post {
   category: PostCategory
   creatorName: string
   profilePic: string | null
-  date?: Date
+  date?: string
   max_participants?: number
+  level?: PostLevels
+  extraLinks?: string
   createdAt: Date
 }
 export interface PostDetails {
   id: string
+  eventId?: string
+  educationId?: string
   title: string
   content: string
   type: PostTypes
@@ -80,7 +84,7 @@ export interface PostDetails {
   profilePic: string
   createdAt: Date
   userId?: string
-  eventDate?: Date
+  eventDate?: string
   maxParticipants?: number
   level?: PostLevels
   extraLinks?: string
@@ -111,8 +115,8 @@ export interface Event {
   category: PostCategory
   creatorName: string
   profilePic: string | null
-  date: Date
-  max_participants: number
+  eventDate: string
+  maxParticipants: number
   createdAt: Date
 }
 
@@ -122,8 +126,8 @@ export interface CreateEventData {
   category: PostCategory
   type: PostTypes
   media: string
-  date: Date
-  max_participants: number
+  eventDate: string
+  maxParticipants: number
 }
 
 export interface UpdateEventData {
@@ -133,6 +137,6 @@ export interface UpdateEventData {
   category: PostCategory
   type?: PostTypes
   media: string
-  date: Date
-  max_participants: number
+  eventDate: string
+  maxParticipants: number
 }

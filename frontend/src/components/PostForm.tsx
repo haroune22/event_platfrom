@@ -1,8 +1,4 @@
-import type {
-  PostCategory,
-  PostDetails,
-  PostTypes,
-} from "@/lib/types"
+import type { PostCategory, PostDetails, PostTypes } from "@/lib/types"
 import { Label } from "./ui/label"
 import { Input } from "./ui/input"
 import { Textarea } from "./ui/textarea"
@@ -34,7 +30,6 @@ type PostFormProps = {
 }
 
 const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
-
   const [type, setType] = useState<PostTypes | "normal">(
     post?.type || PostType || "normal"
   )
@@ -47,8 +42,8 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
     post?.category || "education"
   )
 
-  const [eventDate, setEventDate] = useState("")
-  const [maxParticipants, setMaxParticipants] = useState(0)
+  const [eventDate, setEventDate] = useState<string>(post?.eventDate || "")
+  const [maxParticipants, setMaxParticipants] = useState<number>(post?.maxParticipants || 0)
 
   const [level, setLevel] = useState("beginner")
   const [extraLinks, setExtraLinks] = useState("")
@@ -59,6 +54,7 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
   }, [image])
 
   const displayImage = preview || post?.media || ""
+
   console.log(
     type,
     title,
@@ -79,9 +75,15 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
     }
   }, [preview])
 
-  const { createPostMutation, updatePostMutation } = usePostMutations(post)
+  const {
+    createPostMutation,
+    updatePostMutation,
+    createEventMutation,
+    updateEventMutation,
+  } = usePostMutations(post)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+
     e.preventDefault()
 
     if (!title.trim()) return
@@ -94,24 +96,55 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
       media = imageUrl.secure_url
     }
 
+    const commonData = {
+      title,
+      content,
+      media,
+      category,
+      type,
+    }
+
     try {
       if (post) {
-        updatePostMutation.mutate({
-          id: post.id,
-          title,
-          content,
-          media,
-          category,
-          type,
-        })
+        switch (type) {
+          case "normal":
+            updatePostMutation.mutate({
+              id: post.id,
+              ...commonData,
+            })
+            break
+
+          case "event":
+            updateEventMutation.mutate({
+              id: post.eventId ?? post?.id,
+              ...commonData,
+              eventDate,
+              maxParticipants,
+            })
+            break
+
+          case "education":
+            console.log("")
+            break
+        }
       } else {
-        createPostMutation.mutate({
-          title,
-          content,
-          media,
-          category,
-          type,
-        })
+        switch (type) {
+          case "normal":
+            createPostMutation.mutate(commonData)
+            break
+
+          case "event":
+            createEventMutation.mutate({
+              ...commonData,
+              eventDate,
+              maxParticipants,
+            })
+            break
+
+          case "education":
+            console.log("")
+            break
+        }
       }
       onOpenChange(false)
     } catch (error) {
