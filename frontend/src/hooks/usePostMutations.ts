@@ -1,9 +1,10 @@
 import { createEvent, deleteEvent, updateEvent } from "@/api/events"
-import { createPost, deletePost, updatePost } from "@/api/post"
+import { createPost, deleteEducationPost, deletePost, updateEducationPost, updatePost } from "@/api/post"
 import type {
   CreateEventData,
   CreatePostData,
   Post,
+  UpdateEducationData,
   UpdateEventData,
   UpdatePostData,
 } from "@/lib/types"
@@ -71,6 +72,20 @@ export const usePostMutations = (post?: Post) => {
     },
   })
 
+  const updateEducationMutation = useMutation({
+    mutationFn: (data: UpdateEducationData) => updateEducationPost(data),
+    onSuccess: async (data) => {
+      await queryClient.invalidateQueries({
+        queryKey: ["fetch-post-by-id", post?.id],
+      })
+      toast.success("Education updated successfully")
+      console.log("Education updated successfully", data)
+    },
+    onError: (error) => {
+      console.log(error)
+    },
+  })
+
   const deletePostMutation = useMutation({
       mutationFn: deletePost,
   
@@ -105,6 +120,23 @@ export const usePostMutations = (post?: Post) => {
         toast.error("Failed to delete event.")
       },
     })
+
+    const deleteEducationMutation = useMutation({
+      mutationFn: deleteEducationPost,
+       onSuccess: async () => {
+        await queryClient.invalidateQueries({
+          queryKey: ["posts"],
+        })
+  
+        toast.success("Education deleted successfully 🗑️")
+  
+        navigate("/")
+      },
+  
+      onError: () => {
+        toast.error("Failed to delete education.")
+      },
+    })
   
 
   return {
@@ -114,5 +146,7 @@ export const usePostMutations = (post?: Post) => {
     updateEventMutation,
     deletePostMutation,
     deleteEventMutation,
+    updateEducationMutation,
+    deleteEducationMutation,
   }
 }

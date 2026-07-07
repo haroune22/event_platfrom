@@ -20,15 +20,17 @@ type DeletePostDialogProps = {
 }
 
 const DeletePostDialog = ({ post }: DeletePostDialogProps) => {
-  const { deleteEventMutation, deletePostMutation } = usePostMutations()
+  const { deleteEventMutation, deletePostMutation, deleteEducationMutation } = usePostMutations()
 
   const deleteMutation =
-    post.type === "event" ? deleteEventMutation : deletePostMutation
+    post.type === "event" ? deleteEventMutation : post.type === "education" ? deleteEducationMutation : deletePostMutation
 
   const handleDeletePost = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     if (post.type === "event") {
       deleteMutation.mutate(post.eventId!)
+    } else if (post.type === "normal") {
+      deleteMutation.mutate(post.id)
     } else {
       deleteMutation.mutate(post.id)
     }

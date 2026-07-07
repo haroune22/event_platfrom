@@ -142,3 +142,14 @@ export interface UpdateEventData {
   eventDate: string
   maxParticipants: number
 }
+
+export interface UpdateEducationData {
+  id: string
+  title: string
+  content: string
+  category: PostCategory
+  type?: PostTypes
+  media: string
+  difficulty: string
+  externalLink: string
+}

@@ -35,3 +35,12 @@ export const deletePost = async (id: string) => {
   const res = await api.delete(`/posts/${id}`)
   return res.data
 }
+export const updateEducationPost = async (data: UpdatePostData) => {
+  const res = await api.put(`/posts/education/${data.id}`, data)
+  return res.data.post
+}
+
+export const deleteEducationPost = async (id: string) => {
+  const res = await api.delete(`/posts/education/${id}`)
+  return res.data
+}

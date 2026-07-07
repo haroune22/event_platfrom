@@ -8,9 +8,11 @@ import Post from "./pages/Post"
 import Feed from "./pages/Feed"
 import Events from "./pages/Events"
 import Event from "./pages/Event"
+import { Toaster } from "./components/ui/sonner"
 
 export function App() {
   return (
+    <>
     <BrowserRouter>
       <Routes>
         {/* Public Routes */}
@@ -29,6 +31,8 @@ export function App() {
         </Route>
       </Routes>
     </BrowserRouter>
+    <Toaster richColors position="top-right" />
+    </>
   )
 }
 

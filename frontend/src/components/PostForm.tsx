@@ -80,6 +80,7 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
     updatePostMutation,
     createEventMutation,
     updateEventMutation,
+    updateEducationMutation,
   } = usePostMutations(post)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -124,7 +125,12 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
             break
 
           case "education":
-            console.log("")
+            updateEducationMutation.mutate({
+              id: post.id ,
+              ...commonData,
+              difficulty: level,
+              externalLink: extraLinks,
+            })
             break
         }
       } else {
