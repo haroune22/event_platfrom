@@ -90,14 +90,14 @@ export const PostCard = ({ post }: postCardProps) => {
         <div className="px-4 pt-3 pb-2">
           <span
             className={`rounded-full px-3 py-1 text-xs font-semibold ${
-              post.type === "normal"
+              post.type === "event"
                 ? "bg-orange-100 text-orange-700"
                 : post.type === "education"
                   ? "bg-green-100 text-green-700"
                   : "bg-blue-100 text-blue-700"
             }`}
           >
-            {post.type === "normal" && "📅 post"}
+            {post.type === "event" && "📅 event"}
             {post.type === "education" && "📚 Education"}
             {post.type === "normal" && "💬 Discussion"}
           </span>

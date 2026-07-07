@@ -44,3 +44,15 @@ export const deleteEducationPost = async (id: string) => {
   const res = await api.delete(`/posts/education/${id}`)
   return res.data
 }
+
+export const getSavedPosts = async () => {
+  const res = await api.post(`/posts/saved`)
+  return res.data
+}
+
+
+export const savePost = async (id: string) => {
+  const res = await api.post(`/posts/${id}/save`)
+  return res.data
+}
+

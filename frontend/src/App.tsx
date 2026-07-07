@@ -34,7 +34,6 @@ export function App() {
       <Toaster
         position="bottom-right"
         duration={3000}
-        
         theme="dark"
         toastOptions={{
           style: {

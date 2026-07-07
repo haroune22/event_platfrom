@@ -112,10 +112,16 @@ export const getFeedPosts = async (req, res) => {
 
   try {
     let query = `
-            SELECT p.*, u.profilePic, u.name AS creatorName
-            FROM posts p
-            JOIN users u ON p.userId = u.id
-            WHERE 1=1
+          SELECT
+            p.*,
+            u.name AS creatorName,
+            e.id AS eventId,
+            ed.id AS educationId
+          FROM posts p
+          JOIN users u ON p.userId = u.id
+          LEFT JOIN events e ON e.postId = p.id
+          LEFT JOIN learning_resources ed ON ed.postId = p.id
+          WHERE 1=1
         `;
 
     const values = [];

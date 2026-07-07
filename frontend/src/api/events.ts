@@ -36,3 +36,13 @@ export const deleteEvent = async (id: string) => {
   const res = await api.delete(`/events/${id}`)
   return res.data
 }
+
+export const attendEvent = async (id: string) => {
+  const res = await api.post(`/events/${id}/attend`)
+  return res.data
+}
+
+export const leaveEvent = async (id: string) => {
+  const res = await api.post(`/events/${id}/leave`)
+  return res.data
+}

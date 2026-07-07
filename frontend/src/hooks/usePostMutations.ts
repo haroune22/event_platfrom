@@ -1,5 +1,5 @@
-import { createEvent, deleteEvent, updateEvent } from "@/api/events"
-import { createPost, deleteEducationPost, deletePost, updateEducationPost, updatePost } from "@/api/post"
+import { attendEvent, createEvent, deleteEvent, updateEvent } from "@/api/events"
+import { createPost, deleteEducationPost, deletePost, savePost, updateEducationPost, updatePost } from "@/api/post"
 import type {
   CreateEventData,
   CreatePostData,
@@ -46,12 +46,12 @@ export const usePostMutations = (post?: Post) => {
 
   const createEventMutation = useMutation({
     mutationFn: (data: CreateEventData) => createEvent(data),
-    onSuccess: async (data) => {
+    onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ["fetch-events"],
       })
       toast.success("Event created successfully")
-      console.log("Event created successfully", data)
+      // console.log("Event created successfully", data)
     },
     onError: (error) => {
       console.log(error)
@@ -60,12 +60,12 @@ export const usePostMutations = (post?: Post) => {
 
   const updateEventMutation = useMutation({
     mutationFn: (data: UpdateEventData) => updateEvent(data),
-    onSuccess: async (data) => {
+    onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ["fetch_event_by_id", post?.eventId],
       })
       toast.success("Event updated successfully")
-      console.log("Event updated successfully", data)
+      // console.log("Event updated successfully", data)
     },
     onError: (error) => {
       console.log(error)
@@ -74,12 +74,12 @@ export const usePostMutations = (post?: Post) => {
 
   const updateEducationMutation = useMutation({
     mutationFn: (data: UpdateEducationData) => updateEducationPost(data),
-    onSuccess: async (data) => {
+    onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ["fetch-post-by-id", post?.id],
       })
       toast.success("Education updated successfully")
-      console.log("Education updated successfully", data)
+      // console.log("Education updated successfully", data)
     },
     onError: (error) => {
       console.log(error)
@@ -138,7 +138,39 @@ export const usePostMutations = (post?: Post) => {
       },
     })
   
+    const savePostMutation = useMutation({
+      mutationFn: savePost,
+       onSuccess: async () => {
+        await queryClient.invalidateQueries({
+          queryKey: ["saved-posts"],
+        })
+  
+        toast.success("Post saved successfully")
+  
+        navigate("/")
+      },
+  
+      onError: () => {
+        toast.error("Failed to save post.")
+      },
+    })
 
+    const attendEventMutation = useMutation({
+      mutationFn: attendEvent,
+       onSuccess: async () => {
+        await queryClient.invalidateQueries({
+          queryKey: ["events"],
+        })
+  
+        toast.success("Attending Event")
+  
+        navigate("/")
+      },
+  
+      onError: () => {
+        toast.error("Failed to attend event.")
+      },
+    })
   return {
     createPostMutation,
     updatePostMutation,
@@ -148,5 +180,7 @@ export const usePostMutations = (post?: Post) => {
     deleteEventMutation,
     updateEducationMutation,
     deleteEducationMutation,
+    savePostMutation,
+    attendEventMutation,
   }
 }
