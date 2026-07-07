@@ -13,25 +13,38 @@ import { Toaster } from "./components/ui/sonner"
 export function App() {
   return (
     <>
-    <BrowserRouter>
-      <Routes>
-        {/* Public Routes */}
-        <Route element={<PublicRoute />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Route>
+      <BrowserRouter>
+        <Routes>
+          {/* Public Routes */}
+          <Route element={<PublicRoute />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+          </Route>
 
-        {/* Protected Routes */}
-        <Route element={<ProtectedRoutes />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/feed" element={<Feed />} />
-          <Route path="/event" element={<Events />} />
-          <Route path="/post/:postId" element={<Post />} />
-          <Route path="/event/:eventId" element={<Event />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-    <Toaster richColors position="top-right" />
+          {/* Protected Routes */}
+          <Route element={<ProtectedRoutes />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/feed" element={<Feed />} />
+            <Route path="/event" element={<Events />} />
+            <Route path="/post/:postId" element={<Post />} />
+            <Route path="/event/:eventId" element={<Event />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+      <Toaster
+        position="bottom-right"
+        duration={3000}
+        
+        theme="dark"
+        toastOptions={{
+          style: {
+            background: "#fff",
+            color: "#111827",
+            border: "1px solid #e5e7eb",
+            borderRadius: "2px",
+          },
+        }}
+      />
     </>
   )
 }
