@@ -157,7 +157,7 @@ export const PostDetailsCard = ({
                   🎯 Level
                 </p>
                 <p className="mt-1 text-sm font-medium text-gray-800 capitalize">
-                  {post.level ?? "Not specified"}
+                  {post.difficulty ?? "Not specified"}
                 </p>
               </div>
 
@@ -166,9 +166,9 @@ export const PostDetailsCard = ({
                   🔗 Resources
                 </p>
 
-                {post.extraLinks ? (
+                {post.externalLink ? (
                   <a
-                    href={post?.extraLinks}
+                    href={post?.externalLink}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-1 block truncate text-sm font-medium text-blue-600 hover:underline"

@@ -82,13 +82,11 @@ export const GetPosts = async (req, res) => {
           FROM posts p
           JOIN users u ON p.userId = u.id
           LEFT JOIN events e ON e.postId = p.id
-          LEFT JOIN education ed ON ed.postId = p.id
-          ORDER BY p.createdAt DESC;
+          LEFT JOIN learning_resources ed ON ed.postId = p.id
+          ORDER BY p.createdAt DESC
         `;
 
     const values = [];
-
-    query += " ORDER BY p.createdAt DESC";
 
     query += ` LIMIT ? OFFSET ?`;
 
@@ -207,9 +205,10 @@ export const GetPostById = async (req, res) => {
   }
   try {
     const [post] = await db.query(
-      `SELECT p.*, u.profilePic, u.name AS creatorName
+      `SELECT p.*, u.profilePic, u.name AS creatorName, ed.id AS educationId, ed.externalLink, ed.difficulty
             FROM posts p
-            JOIN users u ON p.userId = u.id
+            RIGHT JOIN users u ON p.userId = u.id
+            LEFT JOIN learning_resources ed ON ed.postId = p.id
             WHERE p.id = ?`,
       [id],
     );

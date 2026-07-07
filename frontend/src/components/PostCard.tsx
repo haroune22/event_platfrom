@@ -22,7 +22,7 @@ export const PostCard = ({ post }: postCardProps) => {
   post.type === "event"
     ? `/event/${post.eventId}`
     : post.type === "education"
-      ? `/education/${post.educationId}`
+      ? `/post/${post.id}`
       : `/post/${post.id}`;
 
   return (

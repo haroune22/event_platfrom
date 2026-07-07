@@ -21,6 +21,7 @@ const Post = () => {
     retry: false,
   })
 
+  console.log(post)
   if (isLoading) {
     return <div>Loading...</div>
   }

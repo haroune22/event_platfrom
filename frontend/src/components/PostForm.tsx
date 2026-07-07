@@ -142,7 +142,11 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
             break
 
           case "education":
-            console.log("")
+            createPostMutation.mutate({
+              ...commonData,
+              difficulty: level,
+              externalLink: extraLinks,
+            })
             break
         }
       }

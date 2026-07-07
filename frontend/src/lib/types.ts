@@ -22,7 +22,7 @@ export interface RegisterData {
 }
 
 export type PostTypes = "normal" | "event" | "education"
-export type PostLevels = "beginner" | "intermediate" | "advanced"
+export type PostDifficultys = "beginner" | "intermediate" | "advanced"
 
 export type PostCategory =
   | "sports"
@@ -46,6 +46,8 @@ export interface CreatePostData {
   category: PostCategory
   type: PostTypes
   media: string
+  difficulty?: string
+  externalLink?: string
 }
 
 export interface CreateCommentData {
@@ -66,8 +68,8 @@ export interface Post {
   profilePic: string | null
   date?: string
   max_participants?: number
-  level?: PostLevels
-  extraLinks?: string
+  difficulty?: PostDifficultys
+  externalLink?: string
   createdAt: Date
 }
 export interface PostDetails {
@@ -86,8 +88,8 @@ export interface PostDetails {
   userId?: string
   eventDate?: string
   maxParticipants?: number
-  level?: PostLevels
-  extraLinks?: string
+  difficulty?: PostDifficultys
+  externalLink?: string
 }
 
 export interface commentData {
