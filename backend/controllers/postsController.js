@@ -74,9 +74,16 @@ export const GetPosts = async (req, res) => {
 
   try {
     let query = `
-            SELECT p.*, u.name AS creatorName
-            FROM posts p
-            JOIN users u ON p.userId = u.id
+          SELECT
+            p.*,
+            u.name AS creatorName,
+            e.id AS eventId,
+            ed.id AS educationId
+          FROM posts p
+          JOIN users u ON p.userId = u.id
+          LEFT JOIN events e ON e.postId = p.id
+          LEFT JOIN education ed ON ed.postId = p.id
+          ORDER BY p.createdAt DESC;
         `;
 
     const values = [];
@@ -137,7 +144,7 @@ export const getFeedPosts = async (req, res) => {
 
     if (!title && !category && !communityId) {
       const categories = await getUserInterest(user);
-    //   console.log(categories);
+      //   console.log(categories);
       if (categories.length > 0) {
         query += ` AND p.category IN (${categories.map(() => "?").join(",")})`;
 

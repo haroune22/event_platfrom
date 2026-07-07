@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button"
 import {
   AlertDialog,
@@ -21,18 +20,18 @@ type DeletePostDialogProps = {
 }
 
 const DeletePostDialog = ({ post }: DeletePostDialogProps) => {
-
-
   const { deleteEventMutation, deletePostMutation } = usePostMutations()
+
+  const deleteMutation =
+    post.type === "event" ? deleteEventMutation : deletePostMutation
 
   const handleDeletePost = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    if(post.type === 'event'){
-      deleteEventMutation.mutate(post?.eventId ?? post.id)
-    }else {
-      deletePostMutation.mutate(post.id)
+    if (post.type === "event") {
+      deleteMutation.mutate(post.eventId!)
+    } else {
+      deleteMutation.mutate(post.id)
     }
-
   }
 
   return (
@@ -47,7 +46,7 @@ const DeletePostDialog = ({ post }: DeletePostDialogProps) => {
         </Button>
       </AlertDialogTrigger>
 
-      <AlertDialogContent className="max-w-md bg-white rounded-2xl">
+      <AlertDialogContent className="max-w-md rounded-2xl bg-white">
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2 text-2xl">
             🗑️ Delete Post
@@ -69,10 +68,10 @@ const DeletePostDialog = ({ post }: DeletePostDialogProps) => {
 
           <AlertDialogAction
             onClick={(e) => handleDeletePost(e)}
-            disabled={deletePostMutation.isPending}
-            className="cursor-pointer text-white bg-red-600 hover:bg-red-700"
+            disabled={deleteMutation.isPending}
+            className="cursor-pointer bg-red-600 text-white hover:bg-red-700"
           >
-            {deleteEventMutation.isPending ? "Deleting..." : "Delete Post"}
+            {deleteMutation.isPending ? "Deleting..." : "Delete"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
