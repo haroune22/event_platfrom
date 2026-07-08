@@ -46,10 +46,9 @@ export const deleteEducationPost = async (id: string) => {
 }
 
 export const getSavedPosts = async () => {
-  const res = await api.post(`/posts/saved`)
+  const res = await api.get(`/posts/saved`)
   return res.data
 }
-
 
 export const savePost = async (id: string) => {
   const res = await api.post(`/posts/${id}/save`)

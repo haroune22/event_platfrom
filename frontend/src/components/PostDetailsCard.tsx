@@ -18,6 +18,7 @@ import { Button } from "./ui/button"
 import CreatePostDialog from "./CreatePostDialog"
 import { useAuth } from "@/hooks/useAuth"
 import DeletePostDialog from "./DeletePostDialog"
+import { usePostMutations } from "@/hooks/usePostMutations"
 
 type PostDetailsCardProps = {
   post: PostDetails
@@ -31,9 +32,11 @@ export const PostDetailsCard = ({
   const { user } = useAuth()
 
   // console.log(post)
-  
+
   const [isLiked, setIsLiked] = useState(false)
   const [openUpdatePost, setOpenUpdatePost] = useState(false)
+
+  const { savePostMutation, attendEventMutation } = usePostMutations(post)
   const {
     data: community,
     error,
@@ -44,6 +47,19 @@ export const PostDetailsCard = ({
     enabled: !!post.communityId,
     retry: false,
   })
+  console.log(post)
+
+  const handleSave = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault()
+
+    if (post.type === "education" || post.type === "normal") {
+      savePostMutation.mutate(post.id)
+    } else if (post.type === "event") {
+      attendEventMutation.mutate(post.eventId ?? post.id)
+    }
+  }
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -229,7 +245,10 @@ export const PostDetailsCard = ({
             <span className="text-sm font-medium">Share</span>
           </Button>
 
-          <Button className="group cursor-pointer flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-600 transition duration-200 hover:bg-yellow-50 hover:text-yellow-600">
+          <Button
+            onClick={(e) => handleSave(e)}
+            className="group flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-600 transition duration-200 hover:bg-yellow-50 hover:text-yellow-600"
+          >
             <Bookmark size={18} className="transition group-hover:scale-110" />
             <span className="text-sm font-medium">
               {post?.type === "event" ? "Attend" : "Save"}

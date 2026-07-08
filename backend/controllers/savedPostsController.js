@@ -24,7 +24,7 @@ export const SavePost = async (req, res) => {
             return res.status(400).json({ message: 'this post already saved'})
         };
 
-        if(post[0].type !== 'learning'){
+        if(post[0].type !== 'education'){
             return res.status(404).json({ message: 'post not found'})
         };
 

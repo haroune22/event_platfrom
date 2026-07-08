@@ -147,7 +147,6 @@ export const usePostMutations = (post?: Post) => {
   
         toast.success("Post saved successfully")
   
-        navigate("/")
       },
   
       onError: () => {
@@ -164,7 +163,6 @@ export const usePostMutations = (post?: Post) => {
   
         toast.success("Attending Event")
   
-        navigate("/")
       },
   
       onError: () => {
