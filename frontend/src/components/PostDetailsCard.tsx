@@ -36,7 +36,12 @@ export const PostDetailsCard = ({
   const [isLiked, setIsLiked] = useState(false)
   const [openUpdatePost, setOpenUpdatePost] = useState(false)
 
-  const { savePostMutation, attendEventMutation } = usePostMutations(post)
+  const {
+    savePostMutation,
+    attendEventMutation,
+    unSavePostMutation,
+    leaveEventMutation,
+  } = usePostMutations(post)
   const {
     data: community,
     error,
@@ -49,17 +54,30 @@ export const PostDetailsCard = ({
   })
   console.log(post)
 
-  const handleSave = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
+  const handleSave = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
 
-    if (post.type === "education" || post.type === "normal") {
+    if (post.type === "event") {
+      if (post.joinedAt) {
+        leaveEventMutation.mutate(post.eventId!)
+      } else {
+        attendEventMutation.mutate(post.eventId!)
+      }
+      return
+    }
+
+    if (post.savedAt) {
+      unSavePostMutation.mutate(post.id)
+    } else {
       savePostMutation.mutate(post.id)
-    } else if (post.type === "event") {
-      attendEventMutation.mutate(post.eventId ?? post.id)
     }
   }
+
+  const isSaving =
+    savePostMutation.isPending ||
+    unSavePostMutation.isPending ||
+    attendEventMutation.isPending ||
+    leaveEventMutation.isPending
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -244,14 +262,38 @@ export const PostDetailsCard = ({
             <Share2 size={18} className="transition group-hover:scale-110" />
             <span className="text-sm font-medium">Share</span>
           </Button>
-
           <Button
-            onClick={(e) => handleSave(e)}
-            className="group flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-600 transition duration-200 hover:bg-yellow-50 hover:text-yellow-600"
+            onClick={handleSave}
+            disabled={isSaving}
+            className={`group flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg px-3 py-2 transition duration-200 ${
+              post.type === "event"
+                ? post.joinedAt
+                  ? "bg-green-50 text-green-700 hover:bg-green-100"
+                  : "text-gray-600 hover:bg-yellow-50 hover:text-yellow-600"
+                : post.savedAt
+                  ? "bg-yellow-50 text-yellow-700 hover:bg-yellow-100"
+                  : "text-gray-600 hover:bg-yellow-50 hover:text-yellow-600"
+            }`}
           >
-            <Bookmark size={18} className="transition group-hover:scale-110" />
+            <Bookmark
+              size={18}
+              className={`transition group-hover:scale-110 ${
+                post.savedAt || post.joinedAt ? "fill-current" : ""
+              }`}
+            />
+
             <span className="text-sm font-medium">
-              {post?.type === "event" ? "Attend" : "Save"}
+              {isSaving
+                ? post.type === "event"
+                  ? "Updating..."
+                  : "Saving..."
+                : post.type === "event"
+                  ? post.joinedAt
+                    ? "Leave Event"
+                    : "Attend Event"
+                  : post.savedAt
+                    ? "Saved"
+                    : "Save"}
             </span>
           </Button>
         </div>

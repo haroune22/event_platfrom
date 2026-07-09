@@ -71,6 +71,8 @@ export interface Post {
   difficulty?: PostDifficultys
   externalLink?: string
   createdAt: Date
+  savedAt?: Date
+  joinedAt?: Date
 }
 export interface PostDetails {
   id: string
@@ -90,6 +92,8 @@ export interface PostDetails {
   maxParticipants?: number
   difficulty?: PostDifficultys
   externalLink?: string
+  savedAt?: Date
+  joinedAt?: Date
 }
 
 export interface commentData {

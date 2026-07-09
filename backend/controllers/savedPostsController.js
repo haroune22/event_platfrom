@@ -1,4 +1,5 @@
 import db from "../config/db.js";
+import { updateUserInterest } from "../utils/userInterest.js";
 
 export const SavePost = async (req, res) => {
     const user = req.user.id

@@ -211,21 +211,22 @@ export const GetPostById = async (req, res) => {
   }
   try {
     const [post] = await db.query(
-      `SELECT p.*, u.profilePic, u.name AS creatorName, ed.id AS educationId, ed.externalLink, ed.difficulty
+      `SELECT p.*, u.profilePic, u.name AS creatorName, ed.id AS educationId, ed.externalLink, ed.difficulty, sp.savedAt
             FROM posts p
-            RIGHT JOIN users u ON p.userId = u.id
+            JOIN users u ON p.userId = u.id
             LEFT JOIN learning_resources ed ON ed.postId = p.id
+            LEFT JOIN saved_posts sp
+                ON sp.postId = p.id
+                AND sp.userId = ?
             WHERE p.id = ?`,
-      [id],
+      [user, id],
     );
 
     if (post.length === 0) {
       return res.status(400).json({ message: "no post found" });
     }
 
-    return res
-      .status(201)
-      .json({ message: "Community created successfully", post: post[0] });
+    return res.status(201).json({ message: "Community created successfully", post: post[0] });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "internal server error" });

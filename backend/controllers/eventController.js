@@ -126,13 +126,14 @@ export const GetEvent = async (req, res) => {
 
   try {
     const [event] = await db.query(
-      `SELECT e.id AS eventId, e.eventDate, e.maxParticipants, p.*, u.name AS creatorName, u.profilePic
+      `SELECT e.id AS eventId, e.eventDate, e.maxParticipants, p.*, u.name AS creatorName, u.profilePic, ea.joinedAt
             FROM events e
             JOIN posts p ON e.postId = p.id
             JOIN users u ON p.userId = u.id
+            LEFT JOIN event_attendees ea ON ea.eventId = e.id AND ea.userId = ?
             WHERE e.id = ?
             `,
-      [id],
+      [user, id],
     );
 
     if (event.length === 0) {

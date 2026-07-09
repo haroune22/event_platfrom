@@ -43,6 +43,6 @@ export const attendEvent = async (id: string) => {
 }
 
 export const leaveEvent = async (id: string) => {
-  const res = await api.post(`/events/${id}/leave`)
+  const res = await api.delete(`/events/${id}/leave`)
   return res.data
 }

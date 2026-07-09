@@ -54,4 +54,7 @@ export const savePost = async (id: string) => {
   const res = await api.post(`/posts/${id}/save`)
   return res.data
 }
-
+export const unSavePost = async (id: string) => {
+  const res = await api.delete(`/posts/${id}/save`)
+  return res.data
+}

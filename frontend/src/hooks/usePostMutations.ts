@@ -1,5 +1,5 @@
-import { attendEvent, createEvent, deleteEvent, updateEvent } from "@/api/events"
-import { createPost, deleteEducationPost, deletePost, savePost, updateEducationPost, updatePost } from "@/api/post"
+import { attendEvent, createEvent, deleteEvent, leaveEvent, updateEvent } from "@/api/events"
+import { createPost, deleteEducationPost, deletePost, savePost, unSavePost, updateEducationPost, updatePost } from "@/api/post"
 import type {
   CreateEventData,
   CreatePostData,
@@ -142,7 +142,7 @@ export const usePostMutations = (post?: Post) => {
       mutationFn: savePost,
        onSuccess: async () => {
         await queryClient.invalidateQueries({
-          queryKey: ["saved-posts"],
+          queryKey:  ["fetch-post-by-id", post?.id],
         })
   
         toast.success("Post saved successfully")
@@ -154,11 +154,27 @@ export const usePostMutations = (post?: Post) => {
       },
     })
 
+    const unSavePostMutation = useMutation({
+      mutationFn: unSavePost,
+       onSuccess: async () => {
+        await queryClient.invalidateQueries({
+          queryKey:  ["fetch-post-by-id", post?.id],
+        })
+  
+        toast.success("Post unsaved successfully")
+  
+      },
+  
+      onError: () => {
+        toast.error("Failed to unsave post.")
+      },
+    })
+
     const attendEventMutation = useMutation({
       mutationFn: attendEvent,
        onSuccess: async () => {
         await queryClient.invalidateQueries({
-          queryKey: ["events"],
+          queryKey: ["fetch_event_by_id", post?.eventId],
         })
   
         toast.success("Attending Event")
@@ -169,6 +185,23 @@ export const usePostMutations = (post?: Post) => {
         toast.error("Failed to attend event.")
       },
     })
+    
+    const leaveEventMutation = useMutation({
+      mutationFn: leaveEvent,
+       onSuccess: async () => {
+        await queryClient.invalidateQueries({
+          queryKey: ["fetch_event_by_id", post?.eventId],
+        })
+  
+        toast.success("Left Event")
+  
+      },
+  
+      onError: () => {
+        toast.error("Failed to leave event.")
+      },
+    })
+
   return {
     createPostMutation,
     updatePostMutation,
@@ -179,6 +212,8 @@ export const usePostMutations = (post?: Post) => {
     updateEducationMutation,
     deleteEducationMutation,
     savePostMutation,
+    unSavePostMutation,
     attendEventMutation,
+    leaveEventMutation,
   }
 }
