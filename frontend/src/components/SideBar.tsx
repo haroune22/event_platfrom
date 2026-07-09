@@ -27,7 +27,7 @@ export const SideBar = () => {
     },
     {
       name: "Saved",
-      path: "/saved",
+      path: "/posts/saved",
       icon: <Bookmark size={20} />,
     },
   ]

@@ -9,6 +9,7 @@ import Feed from "./pages/Feed"
 import Events from "./pages/Events"
 import Event from "./pages/Event"
 import { Toaster } from "./components/ui/sonner"
+import SavedPosts from "./pages/SavedPosts"
 
 export function App() {
   return (
@@ -28,6 +29,7 @@ export function App() {
             <Route path="/event" element={<Events />} />
             <Route path="/post/:postId" element={<Post />} />
             <Route path="/event/:eventId" element={<Event />} />
+            <Route path="/posts/saved" element={<SavedPosts />} />
           </Route>
         </Routes>
       </BrowserRouter>

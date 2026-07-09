@@ -14,6 +14,7 @@ const router = Router()
 router.post('/', authMiddleware, createLimiter , CreatePosts )
 router.get('/', authMiddleware, generalLimiter, GetPosts)
 router.get('/feed', authMiddleware, generalLimiter, getFeedPosts)
+router.get('/saved', authMiddleware, GetSavedPosts)
 router.get('/category/:category', authMiddleware, GetPostsByCat)
 router.get('/:id', authMiddleware, GetPostById)
 router.put('/:id', authMiddleware, UpdatePost)
@@ -31,7 +32,6 @@ router.get('/:postId/comments', authMiddleware, GetComments)
 //saved posts
 router.post('/:id/save', authMiddleware, SavePost)
 router.delete('/:id/save', authMiddleware, UnSavePost)
-router.get('/saved', authMiddleware, GetSavedPosts)
 
 // not interested
 router.post('/:id/notInterested', authMiddleware, NotInterested )

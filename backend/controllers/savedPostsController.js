@@ -91,7 +91,7 @@ export const GetSavedPosts = async (req, res) => {
     try {
 
         const [savedPosts] = await db.query(
-            `SELECT sp.*, p.*, u.username, u.profilePic
+            `SELECT sp.*, p.*, u.name AS creatorName, u.profilePic
             FROM saved_posts sp 
             JOIN posts p ON sp.postId = p.id 
             JOIN users u ON p.userId = u.id
@@ -99,7 +99,7 @@ export const GetSavedPosts = async (req, res) => {
             ORDER BY sp.savedAt DESC`,
             [user]
         );
-
+        // console.log(savedPosts, user)
         if(savedPosts.length === 0){
             return res.status(400).json({ message: 'no posts saved'})
         };
