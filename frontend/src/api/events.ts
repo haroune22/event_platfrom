@@ -2,8 +2,12 @@
 import type { CreateEventData, UpdateEventData } from "@/lib/types"
 import api from "./axios"
 
-export const fetchEvents = async () => {
-  const res = await api.get("/events")
+export const fetchEvents = async (category: string) => {
+  const res = await api.get("/events", {
+    params: {
+      category
+    }
+  })
   return res.data.events
 }
 

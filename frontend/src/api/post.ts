@@ -1,10 +1,11 @@
 import type { CreatePostData, UpdatePostData } from "@/lib/types"
 import api from "./axios"
 
-export const fetchPosts = async (category?: string) => {
+export const fetchPosts = async (category?: string, title?: string) => {
   const res = await api.get("/posts", {
     params:{
-      category
+      category,
+      title
     }
   })
   return res.data.posts

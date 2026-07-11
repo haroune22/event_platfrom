@@ -9,13 +9,11 @@ import {
 export const SideBar = () => {
   const location = useLocation()
   const navigate = useNavigate()
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
   const selectedCategory = searchParams.get("category")
 
-  const canFilter = ["/", "/feed", "/posts/saved", "events"].includes(
-    location.pathname
-  )
-  console.log(canFilter)
+  const canFilter = ["/", "/feed", "/events"].includes(location.pathname)
+  // console.log(canFilter)
 
   const mainLinks = [
     {
@@ -109,6 +107,7 @@ export const SideBar = () => {
             {categories.map((category) => (
               <button
                 key={category.label}
+                disabled={!canFilter}
                 onClick={() => handleCategory(category.label)}
                 className={`w-full cursor-pointer rounded-lg px-4 py-2 text-left transition-all duration-300 ease-out ${
                   selectedCategory === category.label.toLowerCase()

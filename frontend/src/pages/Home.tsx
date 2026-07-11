@@ -8,13 +8,15 @@ const Home = () => {
   const [searchParams] = useSearchParams()
 
   const category = searchParams.get("category") ?? ""
+  const title = searchParams.get("title") ?? ""
+
   const {
     data: posts,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["posts", category],
-    queryFn: () => fetchPosts(category),
+    queryKey: ["posts", category, title],
+    queryFn: () => fetchPosts(category, title),
     retry: false,
   })
 

@@ -2,16 +2,26 @@ import { logoutUser } from "@/api/user"
 import { useAuth } from "@/hooks/useAuth"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Search, Bell, Plus, Menu, X } from "lucide-react"
-import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react"
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom"
 import CreatePostDialog from "./CreatePostDialog"
 import { Button } from "./ui/button"
 
 export const Navbar = () => {
   const { user } = useAuth()
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [title, setTitle] = useState<string>("")
   const [openDialog, setOpenDialog] = useState(false)
+
+  const location = useLocation()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const canFilter = ["/", "/feed", "/events"].includes(location.pathname)
 
   const queryClient = useQueryClient()
 
@@ -28,6 +38,27 @@ export const Navbar = () => {
       console.log(error)
     },
   })
+
+  useEffect(() => {
+  if (!canFilter) return
+
+  const timer = setTimeout(() => {
+    const params = new URLSearchParams(searchParams)
+
+    if (title.trim()) {
+      params.set("title", title)
+    } else {
+      params.delete("title")
+    }
+
+    navigate({
+      pathname: location.pathname,
+      search: params.toString(),
+    })
+  }, 500)
+
+  return () => clearTimeout(timer)
+}, [title, canFilter, location.pathname, navigate, searchParams])
 
   const handleLogout = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
@@ -50,6 +81,8 @@ export const Navbar = () => {
                 <Search size={18} className="text-gray-500" />
                 <input
                   type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
                   placeholder="Search posts, events..."
                   className="w-full bg-transparent text-sm text-gray-900 placeholder-gray-500 outline-none"
                 />
