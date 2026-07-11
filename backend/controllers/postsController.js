@@ -71,6 +71,7 @@ export const GetPosts = async (req, res) => {
   const limit = Math.min(Math.max(parseInt(req.query.limit) || 10, 1), 50);
 
   const offset = (page - 1) * limit;
+  const { category, title, communityId } = req.query;
 
   try {
     let query = `
@@ -83,11 +84,27 @@ export const GetPosts = async (req, res) => {
           JOIN users u ON p.userId = u.id
           LEFT JOIN events e ON e.postId = p.id
           LEFT JOIN learning_resources ed ON ed.postId = p.id
-          ORDER BY p.createdAt DESC
+          WHERE 1=1
         `;
 
     const values = [];
 
+    if (communityId) {
+      query += " AND p.communityId = ?";
+      values.push(communityId);
+    }
+
+    if (category) {
+      query += " AND p.category = ?";
+      values.push(category);
+    }
+
+    if (title) {
+      query += " AND p.title LIKE ?";
+      values.push(`%${title}%`);
+    }
+    query += ` ORDER BY p.createdAt DESC`
+    
     query += ` LIMIT ? OFFSET ?`;
 
     values.push(limit, offset);
@@ -226,7 +243,9 @@ export const GetPostById = async (req, res) => {
       return res.status(400).json({ message: "no post found" });
     }
 
-    return res.status(201).json({ message: "Community created successfully", post: post[0] });
+    return res
+      .status(201)
+      .json({ message: "Community created successfully", post: post[0] });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "internal server error" });

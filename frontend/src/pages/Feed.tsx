@@ -2,15 +2,16 @@ import { fetchFeedPosts } from "@/api/post"
 import { PostCard } from "@/components/PostCard"
 import type { Post } from "@/lib/types"
 import { useQuery } from "@tanstack/react-query"
+import { useSearchParams } from "react-router-dom"
 
 const Feed = () => {
-  const {
-    data,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["feed_posts"],
-    queryFn: fetchFeedPosts,
+  const [searchParams] = useSearchParams()
+
+  const category = searchParams.get("category") ?? ""
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["feed_posts", category],
+    queryFn: () => fetchFeedPosts(category),
     retry: false,
   })
 

@@ -2,15 +2,19 @@ import { fetchPosts } from "@/api/post"
 import { PostCard } from "@/components/PostCard"
 import type { Post } from "@/lib/types"
 import { useQuery } from "@tanstack/react-query"
+import { useSearchParams } from "react-router-dom"
 
 const Home = () => {
+  const [searchParams] = useSearchParams()
+
+  const category = searchParams.get("category") ?? ""
   const {
     data: posts,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["posts"],
-    queryFn: fetchPosts,
+    queryKey: ["posts", category],
+    queryFn: () => fetchPosts(category),
     retry: false,
   })
 

@@ -1,8 +1,21 @@
 import { Home, TrendingUp, Calendar, Users, Bookmark } from "lucide-react"
-import { Link, useLocation } from "react-router-dom"
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom"
 
 export const SideBar = () => {
   const location = useLocation()
+  const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const selectedCategory = searchParams.get("category")
+
+  const canFilter = ["/", "/feed", "/posts/saved", "events"].includes(
+    location.pathname
+  )
+  console.log(canFilter)
 
   const mainLinks = [
     {
@@ -32,6 +45,30 @@ export const SideBar = () => {
     },
   ]
 
+  const categories = [
+    { label: "Sports", icon: "⚽" },
+    { label: "Gaming", icon: "🎮" },
+    { label: "Technology", icon: "💻" },
+    { label: "Fitness", icon: "🏋️" },
+    { label: "Movies", icon: "🎬" },
+    { label: "Education", icon: "🎓" },
+  ]
+
+  const handleCategory = (category: string) => {
+    const params = new URLSearchParams(searchParams)
+
+    if (selectedCategory === category.toLocaleLowerCase()) {
+      params.delete("category")
+    } else {
+      params.set("category", category.toLocaleLowerCase())
+    }
+
+    navigate({
+      pathname: location.pathname,
+      search: params.toString(),
+    })
+  }
+
   const isActive = (path: string) => location.pathname === path
 
   return (
@@ -44,7 +81,10 @@ export const SideBar = () => {
           {mainLinks.map((link, index) => (
             <Link
               key={index}
-              to={link.path}
+              to={{
+                pathname: link.path,
+                search: "",
+              }}
               className={`flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition duration-200 ${
                 isActive(link.path)
                   ? "border-l-4 border-blue-600 bg-blue-50 text-blue-700"
@@ -66,19 +106,20 @@ export const SideBar = () => {
             Categories
           </p>
           <div className="space-y-2 px-2">
-            {[
-              "Sports",
-              "Gaming",
-              "Technology",
-              "Fitness",
-              "Movies",
-              "education",
-            ].map((category) => (
+            {categories.map((category) => (
               <button
-                key={category}
-                className="w-full rounded-lg px-4 py-2 text-left text-sm text-gray-600 transition duration-200 hover:bg-gray-50 hover:text-gray-900"
+                key={category.label}
+                onClick={() => handleCategory(category.label)}
+                className={`w-full cursor-pointer rounded-lg px-4 py-2 text-left transition-all duration-300 ease-out ${
+                  selectedCategory === category.label.toLowerCase()
+                    ? "scale-[1.05] bg-blue-50 text-blue-700 shadow-sm"
+                    : "text-gray-700 hover:scale-[1.03] hover:bg-gray-50 hover:shadow-sm"
+                }`}
               >
-                {category}
+                <span className="mr-2 inline-block transition-transform duration-300 group-hover:scale-125 group-hover:rotate-6">
+                  {category.icon}
+                </span>{" "}
+                {category.label}
               </button>
             ))}
           </div>
