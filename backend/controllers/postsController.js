@@ -106,12 +106,22 @@ export const GetPosts = async (req, res) => {
     query += ` ORDER BY p.createdAt DESC`;
 
     query += ` LIMIT ? OFFSET ?`;
-
+    
     values.push(limit, offset);
+    
+    let totalQuery = `SELECT COUNT(*) AS total
+                        FROM posts
+                        WHERE 1=1
+                        `
+    let totalValues = [];
+    
+    if (category) {
+      totalQuery += " AND category = ?";
+      totalValues.push(category);
+    }
 
     const [[{ total }]] = await db.query(
-      `SELECT COUNT(*) AS total
-      FROM posts`,
+      totalQuery, values
     );
 
     const [rows] = await db.query(query, values);

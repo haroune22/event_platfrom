@@ -9,15 +9,31 @@ import {
 import { useSearchParams } from "react-router-dom"
 
 type HomeNavigationProps = {
-    totalPages: number
+  totalPages: number
 }
 
-const HomePagination = ({ totalPages}: HomeNavigationProps) => {
+const HomePagination = ({ totalPages }: HomeNavigationProps) => {
   const [searchParams, setSearchParams] = useSearchParams()
   const page = Number(searchParams.get("page")) || 1
 
   const hasNext = page < totalPages
   const hasPrev = page > 1
+
+  const handleNext = () => {
+    const params = new URLSearchParams(searchParams)
+
+    params.set("page", String(page + 1))
+
+    setSearchParams(params)
+  }
+
+  const handlePrev = () => {
+    const params = new URLSearchParams(searchParams)
+
+    params.set("page", String(page - 1))
+
+    setSearchParams(params)
+  }
 
   return (
     <>
@@ -25,13 +41,7 @@ const HomePagination = ({ totalPages}: HomeNavigationProps) => {
         <PaginationContent>
           {hasPrev && (
             <PaginationItem>
-              <PaginationPrevious
-                onClick={() =>
-                  setSearchParams({
-                    page: String(page - 1),
-                  })
-                }
-              />
+              <PaginationPrevious onClick={() => handlePrev()} />
             </PaginationItem>
           )}
 
@@ -41,13 +51,7 @@ const HomePagination = ({ totalPages}: HomeNavigationProps) => {
 
           {hasNext && (
             <PaginationItem>
-              <PaginationNext
-                onClick={() =>
-                  setSearchParams({
-                    page: String(page + 1),
-                  })
-                }
-              />
+              <PaginationNext onClick={() => handleNext()} />
             </PaginationItem>
           )}
         </PaginationContent>

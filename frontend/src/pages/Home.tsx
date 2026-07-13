@@ -10,13 +10,9 @@ const Home = () => {
 
   const category = searchParams.get("category") ?? ""
   const title = searchParams.get("title") ?? ""
-   const page = Number(searchParams.get("page")) || 1
+  const page = Number(searchParams.get("page")) || 1
 
-  const {
-    data,
-    isLoading,
-    error,
-  } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ["posts", category, title, page],
     queryFn: () => fetchPosts(category, title, page),
     retry: false,
@@ -36,7 +32,7 @@ const Home = () => {
       {data.posts?.map((post: Post) => (
         <PostCard post={post} key={post.id} />
       ))}
-      <HomePagination totalPages={data.totalPages}/>
+      <HomePagination totalPages={data.totalPages} />
     </div>
   )
 }
