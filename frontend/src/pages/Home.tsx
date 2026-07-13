@@ -1,4 +1,5 @@
 import { fetchPosts } from "@/api/post"
+import HomePagination from "@/components/HomePagination"
 import { PostCard } from "@/components/PostCard"
 import type { Post } from "@/lib/types"
 import { useQuery } from "@tanstack/react-query"
@@ -9,18 +10,19 @@ const Home = () => {
 
   const category = searchParams.get("category") ?? ""
   const title = searchParams.get("title") ?? ""
+   const page = Number(searchParams.get("page")) || 1
 
   const {
-    data: posts,
+    data,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["posts", category, title],
-    queryFn: () => fetchPosts(category, title),
+    queryKey: ["posts", category, title, page],
+    queryFn: () => fetchPosts(category, title, page),
     retry: false,
   })
 
-  // console.log(posts)
+  console.log(data)
   if (isLoading) {
     return <div>Loading...</div>
   }
@@ -30,10 +32,11 @@ const Home = () => {
   }
 
   return (
-    <div>
-      {posts?.map((post: Post) => (
+    <div className="flex flex-col gap-4">
+      {data.posts?.map((post: Post) => (
         <PostCard post={post} key={post.id} />
       ))}
+      <HomePagination totalPages={data.totalPages}/>
     </div>
   )
 }

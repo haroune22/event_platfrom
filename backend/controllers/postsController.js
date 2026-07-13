@@ -103,15 +103,30 @@ export const GetPosts = async (req, res) => {
       query += " AND p.title LIKE ?";
       values.push(`%${title}%`);
     }
-    query += ` ORDER BY p.createdAt DESC`
-    
+    query += ` ORDER BY p.createdAt DESC`;
+
     query += ` LIMIT ? OFFSET ?`;
 
     values.push(limit, offset);
 
+    const [[{ total }]] = await db.query(
+      `SELECT COUNT(*) AS total
+      FROM posts`,
+    );
+
     const [rows] = await db.query(query, values);
 
-    return res.status(200).json({ message: "posts found", posts: rows });
+    return res
+      .status(200)
+      .json({
+        message: "posts found",
+        posts: rows,
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      });
+      
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "internal server error" });
