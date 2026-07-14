@@ -14,5 +14,9 @@ router.get('/:id', authMiddleware, GetCommunityById)
 router.put('/:id', authMiddleware, UpdateCommunity)
 router.delete('/:id', authMiddleware, DeleteCommunity)
 
+// promote & demote:
+router.post('/:id/promote', authMiddleware,   () => {})
+router.post('/:id/demote', authMiddleware,   () => {})
+
 
 export default router
