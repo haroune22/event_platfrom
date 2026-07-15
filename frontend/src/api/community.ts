@@ -11,7 +11,11 @@ export const fetchUserCommunities = async () => {
   return res.data.communities
 }
 
-export const fetchCommunities = async () => {
-  const res = await api.get('/community')
+export const fetchCommunities = async (name?:string) => {
+  const res = await api.get('/community', {
+    params:{
+      name
+    }
+  })
   return res.data.communities
 }
