@@ -23,6 +23,8 @@ export interface RegisterData {
 
 export type PostTypes = "normal" | "event" | "education"
 export type PostDifficultys = "beginner" | "intermediate" | "advanced"
+export type communityVisibility = "public" | "private"
+export type userRoles = "owner" | "member" | "moderator"
 
 export type PostCategory =
   | "sports"
@@ -156,4 +158,19 @@ export interface UpdateEducationData {
   media: string
   difficulty: string
   externalLink: string
+}
+
+export interface userCommunitiesType {
+  id: string
+  name: string
+  description: string
+  createdBy: string
+  category: PostCategory
+  updatedAt: Date
+  image: string
+  banner: string
+  visibility: communityVisibility
+  creatorName: string
+  profilePic: string
+  role?: userRoles
 }

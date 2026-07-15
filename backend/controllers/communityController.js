@@ -96,6 +96,44 @@ export const GetCommunities = async (req, res) => {
   }
 };
 
+export const GetUserCommunities = async (req, res) => {
+  const user = req.user.id;
+
+  const page = Math.max(parseInt(req.query.page) || 1, 1);
+  const limit = Math.min(Math.max(parseInt(req.query.limit) || 10, 1), 50);
+
+  const offset = (page - 1) * limit;
+
+  try {
+    let query = `
+          SELECT
+              c.*,
+              u.name AS creatorName,
+              u.profilePic,
+              cm.role
+          FROM community_members cm
+          JOIN community c ON cm.communityId = c.id
+          JOIN users u ON c.createdBy = u.id
+          WHERE cm.userId = ?
+          ORDER BY cm.joinedAt DESC
+          LIMIT ? OFFSET ?
+        `;
+
+    let values = [];
+
+    values.push(user, limit, offset);
+
+    const [rows] = await db.query(query, values);
+
+    return res
+      .status(200)
+      .json({ message: "communities found", communities: rows });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "internal server error" });
+  }
+};
+
 export const GetCommunitiesByCat = async (req, res) => {
   const category = req.params.category;
 

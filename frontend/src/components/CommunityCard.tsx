@@ -1,8 +1,18 @@
+import type { userCommunitiesType } from '@/lib/types'
 import React from 'react'
 
-const CommunityCard = () => {
+interface CommunityCardProps  {
+    communities: userCommunitiesType[]
+}
+const CommunityCard = ({communities}:CommunityCardProps) => {
   return (
-    <div>CommunityCard</div>
+    <div>
+        {communities.map((c) => (
+            <h1>
+                {c.name}
+            </h1>
+        ))}
+    </div>
   )
 }
 
