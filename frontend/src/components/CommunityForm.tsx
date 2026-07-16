@@ -91,7 +91,7 @@ const CommunityForm = ({ community }: CommunityFormTypes) => {
                 <SelectValue />
               </SelectTrigger>
 
-              <SelectContent>
+              <SelectContent position="popper" className="bg-white shadow-lg">
                 <SelectGroup>
                   <SelectItem value="education">🎓 Education</SelectItem>
                   <SelectItem value="sports">⚽ Sports</SelectItem>
@@ -120,7 +120,7 @@ const CommunityForm = ({ community }: CommunityFormTypes) => {
                 <SelectValue />
               </SelectTrigger>
 
-              <SelectContent>
+              <SelectContent position="popper" className="bg-white shadow-lg">
                 <SelectGroup>
                   <SelectItem value="public">
                     <div className="flex items-center gap-2">
@@ -168,14 +168,14 @@ const CommunityForm = ({ community }: CommunityFormTypes) => {
         </div>
       </div>
 
-      {/* ================= RIGHT SIDE ================= */}
+      {/* preview side */}
 
       <div className="overflow-y-auto bg-gray-100 p-10">
         <h2 className="mb-6 text-2xl font-bold">Live Preview</h2>
 
         <div className="mx-auto max-w-4xl overflow-hidden rounded-3xl bg-white shadow-xl">
           <div
-            className="relative h-56 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 bg-cover bg-center"
+            className="relative h-56 bg-linear-to-r from-blue-500 via-indigo-500 to-purple-500 bg-cover bg-center"
             style={
               newCommunity.banner
                 ? {
