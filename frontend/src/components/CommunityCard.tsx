@@ -1,6 +1,7 @@
 import type { userCommunitiesType } from "@/lib/types"
 import { Card, CardContent } from "./ui/card"
 import { Button } from "./ui/button"
+import { Link } from "react-router-dom"
 
 interface CommunityCardProps {
   communities: userCommunitiesType[]
@@ -14,7 +15,7 @@ const CommunityCard = ({ communities }: CommunityCardProps) => {
           key={c.id}
           className="group cursor-pointer w-76 overflow-hidden rounded-2xl border-0 bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
         >
-          <div className="relative h-28 bg-linear-to-r from-blue-500 via-indigo-500 to-purple-500">
+          <Link to={`/communities/${c.id}`} className="relative h-28 bg-linear-to-r from-blue-500 via-indigo-500 to-purple-500">
             {c.banner && (
               <img
                 src={c.banner}
@@ -36,7 +37,7 @@ const CommunityCard = ({ communities }: CommunityCardProps) => {
                 </div>
               )}
             </div>
-          </div>
+          </Link>
 
           <CardContent className="pt-12">
             <div className="flex items-start justify-between">

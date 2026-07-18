@@ -52,14 +52,23 @@ export const GetCommunities = async (req, res) => {
   const offset = (page - 1) * limit;
 
   try {
-    let query = `
-            SELECT c.*, u.name AS creatorName, u.profilePic
-            FROM community c
-            JOIN users u ON c.createdBy = u.id
-            WHERE 1=1
-        `;
+   let query = `
+    SELECT
+        c.*,
+        u.name AS creatorName,
+        u.profilePic
+    FROM community c
+    JOIN users u ON c.createdBy = u.id
+    WHERE 1=1
+    AND NOT EXISTS (
+        SELECT 1
+        FROM community_members cm
+        WHERE cm.communityId = c.id
+        AND cm.userId = ?
+    )
+`;
 
-    const values = [];
+    const values = [user];
 
     if (category) {
       query += " AND c.category = ?";

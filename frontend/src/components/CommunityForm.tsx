@@ -25,7 +25,6 @@ type CommunityFormTypes = {
 }
 
 const CommunityForm = ({ community }: CommunityFormTypes) => {
-
   const [newCommunity, setNewCommunity] = useState({
     name: community?.name || "",
     description: community?.description || "",
@@ -89,12 +88,19 @@ const CommunityForm = ({ community }: CommunityFormTypes) => {
         : Promise.resolve(null),
     ])
 
-    console.log({ bannerRes, imageRes })
-    createCommunityMutation.mutate({
+    const payload = {
       ...newCommunity,
       image: imageRes?.secure_url ?? null,
       banner: bannerRes?.secure_url ?? null,
-    })
+    }
+
+    if (community) {
+      updateCommunityMutation.mutate({
+        ...payload,
+      })
+    } else {
+      createCommunityMutation.mutate(payload)
+    }
   }
 
   return (
