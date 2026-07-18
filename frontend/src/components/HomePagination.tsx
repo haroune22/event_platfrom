@@ -40,7 +40,7 @@ const HomePagination = ({ totalPages }: HomeNavigationProps) => {
       <Pagination>
         <PaginationContent>
           {hasPrev && (
-            <PaginationItem>
+            <PaginationItem className="cursor-pointer hover:scale-103 transition-transform">
               <PaginationPrevious onClick={() => handlePrev()} />
             </PaginationItem>
           )}
@@ -50,7 +50,7 @@ const HomePagination = ({ totalPages }: HomeNavigationProps) => {
           </PaginationItem>
 
           {hasNext && (
-            <PaginationItem>
+            <PaginationItem className="cursor-pointer hover:scale-103 transition-transform">
               <PaginationNext onClick={() => handleNext()} />
             </PaginationItem>
           )}

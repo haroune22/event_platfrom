@@ -1,7 +1,7 @@
 import { logoutUser } from "@/api/user"
 import { useAuth } from "@/hooks/useAuth"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { Search, Bell, Plus, Menu, X } from "lucide-react"
+import { Search,LogOut, Bell, Plus, Menu, X } from "lucide-react"
 import { useEffect, useState } from "react"
 import {
   Link,
@@ -71,7 +71,7 @@ export const Navbar = () => {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <Link to="/" className="flex shrink-0 items-center gap-2">
-              <div className="flex h-12 w-40 items-center justify-center rounded-lg bg-linear-to-br">
+              <div className="flex hover:scale-103 transition ease-in h-12 w-40 items-center justify-center rounded-lg bg-linear-to-br">
                 <img src="logo.png" className="h-full w-full object-cover" />
               </div>
             </Link>
@@ -103,9 +103,9 @@ export const Navbar = () => {
 
               <Button
                 onClick={() => setOpenDialog(true)}
-                className="flex items-center gap-2 rounded-full bg-blue-600 px-4 py-2 font-medium text-white transition duration-200 hover:bg-blue-700"
+                className="flex items-center gap-2 cursor-pointer hover:scale-103 rounded-full bg-blue-600 px-4 py-4.5 font-medium text-white transition duration-100 ease-in hover:bg-blue-700"
               >
-                <Plus size={18} />
+                <Plus size={18} className="text-white mr-1" />
                 <span className="hidden lg:inline">Create</span>
               </Button>
 
@@ -124,8 +124,12 @@ export const Navbar = () => {
               </div>
               <button
                 onClick={(e) => handleLogout(e)}
-                className="w-full cursor-pointer rounded-lg bg-red-600 px-4 py-2 text-white transition duration-200 hover:bg-red-500"
+                className="w-full hover:scale-103 flex items-center justify-center gap cursor-pointer rounded-lg bg-red-600 px-4 py-2 text-white transition duration-200 hover:bg-red-500"
               >
+                <LogOut
+                  size={20}
+                  className="text-white mr-2.5"
+                />
                 Logout
               </button>
             </div>

@@ -17,7 +17,7 @@ const Communities = () => {
     isLoading: loadingUserCommunities,
     error: userCommunitiesError,
   } = useQuery({
-    queryKey: ["user-communities"],
+    queryKey: ["communities"],
     queryFn: fetchUserCommunities,
     placeholderData: keepPreviousData,
   })
@@ -32,6 +32,7 @@ const Communities = () => {
     queryFn: () => fetchCommunities(name),
     placeholderData: keepPreviousData,
   })
+  console.log(userCommunities)
 
   if (loadingUserCommunities || loadingCommunities) {
     return (
@@ -110,7 +111,7 @@ const Communities = () => {
 
         <Separator />
 
-        <section className="min-h-125 space-y-6">
+        <section className="min-h-125  space-y-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <h2 className="text-3xl font-bold text-gray-900">

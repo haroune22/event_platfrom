@@ -12,7 +12,7 @@ const CommunityCard = ({ communities }: CommunityCardProps) => {
       {communities.map((c) => (
         <Card
           key={c.id}
-          className="group cursor-pointer w-80 overflow-hidden rounded-2xl border-0 bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+          className="group cursor-pointer w-76 overflow-hidden rounded-2xl border-0 bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
         >
           <div className="relative h-28 bg-linear-to-r from-blue-500 via-indigo-500 to-purple-500">
             {c.banner && (

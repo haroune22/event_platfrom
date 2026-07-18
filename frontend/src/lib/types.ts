@@ -174,3 +174,18 @@ export interface userCommunitiesType {
   profilePic: string
   role?: userRoles
 }
+
+
+export interface CommunityCRUD {
+  id?: string
+  name: string
+  description: string
+  createdBy?: string
+  category: PostCategory
+  image: File | null
+  banner: File | null
+  visibility: communityVisibility
+  creatorName?: string
+  profilePic?: string
+  role?: userRoles
+}

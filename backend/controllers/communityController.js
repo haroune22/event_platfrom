@@ -6,7 +6,7 @@ export const CreateCommunity = async (req, res) => {
   const user = req.user.id;
   const { name, description, category, image, banner } = req.body;
 
-  if (!name || !description || !category || !image) {
+  if (!name || !description || !category || !image || !banner) {
     return res.status(400).json({ message: "all fields required" });
   }
 
@@ -24,8 +24,8 @@ export const CreateCommunity = async (req, res) => {
     const communityId = randomUUID();
 
     await db.query(
-      "INSERT INTO community (id, name, description, image, category, createdBy) VALUES (?, ?, ?, ?, ?, ?)",
-      [communityId, name, description, image, category, user],
+      "INSERT INTO community (id, name, description, image, banner, category, createdBy) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [communityId, name, description, image, banner, category, user],
     );
 
     await db.query(

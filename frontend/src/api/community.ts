@@ -1,3 +1,4 @@
+import type { CommunityCRUD } from "@/lib/types"
 import api from "./axios"
 
 export const fetchCommunityById = async (communityId: string) => {
@@ -18,4 +19,14 @@ export const fetchCommunities = async (name?:string) => {
     }
   })
   return res.data.communities
+}
+
+export const createCommunity = async (community: CommunityCRUD) => {
+  const res = await api.post('community', community)
+  return res.data
+}
+
+export const updateCommunity = async (community: CommunityCRUD) => {
+  const res = await api.put(`community/${community.id}`, community)
+  return res.data
 }
