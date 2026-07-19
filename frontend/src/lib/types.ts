@@ -181,9 +181,10 @@ export interface CommunityCRUD {
   name: string
   description: string
   createdBy?: string
+  createdAt?: string
   category: PostCategory
-  image: File | null
-  banner: File | null
+  image: File | null | string
+  banner: File | null | string
   visibility: communityVisibility
   creatorName?: string
   profilePic?: string
