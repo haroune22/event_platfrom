@@ -163,13 +163,13 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
   }
 
   return (
-    <div className="flex h-[85vh] flex-col">
+    <div className="flex w-120 h-[90vh] flex-col">
       <div className="border-b bg-gray-50 px-6 py-5">
-        <h2 className="text-2xl font-bold text-gray-900">
+        <h2 className="text-2xl text-center font-bold text-gray-900">
           {post ? "✏️ Update Post" : "✨ Create Post"}
         </h2>
 
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="mt-1 text-center text-sm text-gray-500">
           Share something with your community.
         </p>
       </div>
@@ -185,7 +185,7 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Give your post a title..."
-            className="h-11 max-w-80 border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="h-11 max-w-full border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500"
           />
         </div>
 
@@ -197,11 +197,11 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
             onChange={(e) => setContent(e.target.value)}
             rows={8}
             placeholder="What's on your mind?"
-            className="h-24 max-w-80 resize-none border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="h-24 max-w-full resize-none border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500"
           />
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2 max-w-fit">
           <Label className="font-medium text-gray-700">Type</Label>
           <Select
             value={type}
@@ -238,7 +238,7 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
           />
         )}
 
-        <div className="space-y-2">
+        <div className="space-y-2 max-w-fit">
           <Label className="font-medium text-gray-700">🏷️ Category</Label>
 
           <Select

@@ -1,9 +1,9 @@
 import type { CommunityCRUD } from "@/lib/types"
 import api from "./axios"
 
-export const fetchCommunityById = async (communityId: string) => {
-  const res = await api.get(`/community/${communityId}`)
-  return res.data.community
+export const fetchCommunityById = async (id: string) => {
+  const res = await api.get(`/community/${id}`)
+  return res.data
 }
 
 

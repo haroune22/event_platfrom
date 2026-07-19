@@ -11,6 +11,11 @@ import Event from "./pages/Event"
 import { Toaster } from "./components/ui/sonner"
 import SavedPosts from "./pages/SavedPosts"
 import Communities from "./pages/Communities"
+import Community from "./pages/Community"
+import CommunityPosts from "./components/CommunityDetails/CommunityPosts"
+import CommunityEvents from "./components/CommunityDetails/CommunityEvents"
+import CommunityMembers from "./components/CommunityDetails/CommunityMembers"
+import CommunityAbout from "./components/CommunityDetails/CommunityAbout"
 
 export function App() {
   return (
@@ -32,6 +37,15 @@ export function App() {
             <Route path="/event/:eventId" element={<Event />} />
             <Route path="/posts/saved" element={<SavedPosts />} />
             <Route path="/communities" element={<Communities />} />
+
+            {/* Community */}
+            <Route path="/communities/:id" element={<Community />}>
+              <Route index element={<CommunityPosts />} />
+              <Route path="events" element={<CommunityEvents />} />
+              <Route path="members" element={<CommunityMembers />} />
+              <Route path="about" element={<CommunityAbout />} />
+            </Route>
+            
           </Route>
         </Routes>
       </BrowserRouter>

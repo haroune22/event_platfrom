@@ -52,7 +52,7 @@ export const GetCommunities = async (req, res) => {
   const offset = (page - 1) * limit;
 
   try {
-   let query = `
+    let query = `
     SELECT
         c.*,
         u.name AS creatorName,
@@ -172,12 +172,13 @@ export const GetCommunityById = async (req, res) => {
   if (!id) {
     return res.status(400).json({ message: "community id is required" });
   }
+
   try {
     const [community] = await db.query(
       `SELECT c.*, u.name AS creatorName, u.profilePic
             FROM community c
             JOIN users u ON c.createdBy = u.id
-            WHERE id = ?`,
+            WHERE c.id = ?`,
       [id],
     );
 
@@ -187,9 +188,9 @@ export const GetCommunityById = async (req, res) => {
 
     const [members] = await db.query(
       `SELECT cm.role, cm.userId, u.id, u.name, u.email, u.profilePic
-            FROM community_members cm
-            JOIN users u ON cm.userId = u.id
-            WHERE cm.communityId = ?`,
+          FROM community_members cm
+          JOIN users u ON cm.userId = u.id
+          WHERE cm.communityId = ?`,
       [id],
     );
 
@@ -200,8 +201,9 @@ export const GetCommunityById = async (req, res) => {
     return res.status(201).json({
       message: "Community found successfully",
       community: community[0],
+      memberCount: members.length,
+      isMember: !!currentUser,
       currentUserRole,
-      members,
     });
   } catch (error) {
     console.log(error);
