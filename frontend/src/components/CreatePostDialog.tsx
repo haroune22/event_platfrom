@@ -8,6 +8,7 @@ type createPostDialogProps = {
   onOpenChange: Dispatch<SetStateAction<boolean>>
   post?: PostDetails
   PostType?: PostTypes
+  communityId?: string
 }
 
 // changing the name later to PostDialog to be more generic and reusable for both creating and updating posts
@@ -16,12 +17,13 @@ const CreatePostDialog = ({
   openDialog,
   onOpenChange,
   PostType,
+  communityId,
   post
 }: createPostDialogProps) => {
   return (
     <Dialog onOpenChange={onOpenChange} open={openDialog}>
       <DialogContent className="max-h-[90vh] max-w-3xl overflow-hidden rounded-3xl p-0">
-        <PostForm PostType={PostType} post={post} onOpenChange={onOpenChange} />
+        <PostForm communityId={communityId} PostType={PostType} post={post} onOpenChange={onOpenChange} />
       </DialogContent>
     </Dialog>
   )

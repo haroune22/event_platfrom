@@ -24,7 +24,7 @@ const SavedPosts = () => {
   }
 
   return (
-    <div>
+    <div className="flex flex-col gap-6 max-w-4xl mx-auto px-4">
       {posts?.map((post: Post) => (
         <PostCard post={post} key={post.id} />
       ))}

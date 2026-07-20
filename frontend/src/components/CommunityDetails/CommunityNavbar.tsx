@@ -38,14 +38,14 @@ const CommunityNavbar = () => {
   }
 
   return (
-    <nav className="border-b border-gray-200 bg-white sticky top-16 z-40">
-      <div className="flex items-center overflow-x-auto px-4 sm:px-6">
+    <nav className="border-b mx-auto w-fit border-gray-200 bg-white sticky top-16 z-40">
+      <div className="flex items-center overflow-x-auto px-6 gap-6 sm:px-6">
         {navItems.map((item) => (
           <Link
             key={item.path}
             to={item.path}
             className={`
-              flex items-center gap-2 px-4 py-3 font-medium text-sm transition duration-200 whitespace-nowrap
+              flex items-center gap-3 px-4 py-3 font-medium text-sm transition duration-200 whitespace-nowrap
               border-b-2
               ${
                 isActive(item.path)

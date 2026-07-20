@@ -40,7 +40,7 @@ const CommunityCard = ({ communities }: CommunityCardProps) => {
           </Link>
 
           <CardContent className="pt-12">
-            <div className="flex items-start justify-between">
+            <Link to={`/communities/${c.id}`} className="flex items-start justify-between">
               <div>
                 <h2 className="text-lg font-bold text-gray-900">{c.name}</h2>
 
@@ -48,14 +48,14 @@ const CommunityCard = ({ communities }: CommunityCardProps) => {
                   {c.category}
                 </span>
               </div>
-            </div>
+            </Link>
 
             <p className="mt-4 line-clamp-3 text-sm leading-6 text-gray-600">
               {c.description}
             </p>
 
             <div className="mt-5 flex items-center justify-between">
-              <div className="flex items-center gap-2">
+              <Link to={`/communities/${c.id}`} className="flex items-center gap-2">
                 {c.profilePic ? (
                   <img
                     src={c.profilePic}
@@ -68,7 +68,7 @@ const CommunityCard = ({ communities }: CommunityCardProps) => {
                 )}
 
                 <span className="text-sm text-gray-500">{c.creatorName}</span>
-              </div>
+              </Link>
 
               <Button
                 size="lg"

@@ -6,7 +6,6 @@ import type { Post } from "@/lib/types"
 import { useQuery } from "@tanstack/react-query"
 import { useSearchParams } from "react-router-dom"
 
-// Mock data - replace with API call
 const SUGGESTED_COMMUNITIES = [
   {
     id: "1",

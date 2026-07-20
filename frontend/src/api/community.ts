@@ -21,6 +21,15 @@ export const fetchCommunities = async (name?:string) => {
   return res.data.communities
 }
 
+export const fetchCommunityPosts = async (id?: string, page?: number) => {
+  const res = await api.get(`/community/${id}/posts`, {
+    params: {
+      page
+    }
+  })
+  return res.data
+}
+
 export const createCommunity = async (community: CommunityCRUD) => {
   const res = await api.post('community', community)
   return res.data

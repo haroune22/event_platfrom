@@ -38,7 +38,7 @@ export function App() {
             <Route path="/posts/saved" element={<SavedPosts />} />
             <Route path="/communities" element={<Communities />} />
 
-            {/* Community */}
+            {/* Community Routes */}
             <Route path="/communities/:id" element={<Community />}>
               <Route index element={<CommunityPosts />} />
               <Route path="events" element={<CommunityEvents />} />

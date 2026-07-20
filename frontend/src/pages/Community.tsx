@@ -7,11 +7,7 @@ import { Outlet, useParams } from "react-router-dom"
 const Community = () => {
   const { id } = useParams()
 
-  const {
-    data,
-    error,
-    isLoading,
-  } = useQuery({
+  const { data, error, isLoading } = useQuery({
     queryKey: ["fetch-community-by-id", id],
     queryFn: () => fetchCommunityById(id!),
     enabled: !!id,
@@ -27,18 +23,23 @@ const Community = () => {
   if (error) {
     return <div>Error fetching community</div>
   }
-  
+
   return (
-      <div className="space-y-8">
-            <CommunityHeader
-                community={data.community}
-                role={data.currentUserRole}
-                membersCount={data.membersCount}
-            />
-            <CommunityNavbar />
-            <Outlet />
-        </div>
-    
+    <div className="space-y-8">
+      <CommunityHeader
+        community={data.community}
+        role={data.currentUserRole}
+        memberCount={data.memberCount}
+        isMember={data.isMember}
+      />
+      <CommunityNavbar />
+      <Outlet
+        context={{
+          community: data.community,
+          currentUserRole: data.currentUserRole,
+        }}
+      />
+    </div>
   )
 }
 

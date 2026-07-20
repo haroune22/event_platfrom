@@ -84,7 +84,7 @@ export interface PostDetails {
   content: string
   type: PostTypes
   media: string
-  communityId: string
+  communityId?: string
   category: PostCategory
   creatorName: string
   profilePic: string

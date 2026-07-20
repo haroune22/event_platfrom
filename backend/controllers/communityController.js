@@ -211,6 +211,62 @@ export const GetCommunityById = async (req, res) => {
   }
 };
 
+export const GetCommunityPosts = async (req, res) => {
+  const user = req.user.id;
+  const id = req.params.id;
+
+  const page = Math.max(parseInt(req.query.page) || 1, 1);
+  const limit = Math.min(Math.max(parseInt(req.query.limit) || 10, 1), 50);
+
+  const offset = (page - 1) * limit;
+
+  if (!id) {
+    return res.status(400).json({ message: "community id is required" });
+  }
+
+  try {
+    let query = `
+          SELECT
+            p.*,
+            u.name AS creatorName,
+            u.profilePic
+          FROM posts p
+          JOIN users u ON p.userId = u.id
+          WHERE p.communityId = ?
+        `;
+
+    const values = [];
+
+    values.push(id);
+
+    query += ` ORDER BY p.createdAt DESC`;
+
+    query += ` LIMIT ? OFFSET ?`;
+
+    values.push(limit, offset);
+
+    let totalQuery = `SELECT COUNT(*) AS total
+                        FROM posts
+                        WHERE communityId = ?`;
+
+    const [[{ total }]] = await db.query(totalQuery, values);
+
+    const [rows] = await db.query(query, values);
+
+    return res.status(200).json({
+      message: "posts found",
+      posts: rows,
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "internal server error" });
+  }
+};
+
 export const UpdateCommunity = async (req, res) => {
   const user = req.user.id;
   const id = req.params.id;

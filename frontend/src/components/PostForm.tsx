@@ -27,9 +27,15 @@ type PostFormProps = {
   post?: PostDetails
   onOpenChange: Dispatch<SetStateAction<boolean>>
   PostType?: PostTypes
+  communityId?: string
 }
 
-const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
+const PostForm = ({
+  post,
+  onOpenChange,
+  PostType,
+  communityId,
+}: PostFormProps) => {
   const [type, setType] = useState<PostTypes | "normal">(
     post?.type || PostType || "normal"
   )
@@ -43,7 +49,9 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
   )
 
   const [eventDate, setEventDate] = useState<string>(post?.eventDate || "")
-  const [maxParticipants, setMaxParticipants] = useState<number>(post?.maxParticipants || 0)
+  const [maxParticipants, setMaxParticipants] = useState<number>(
+    post?.maxParticipants || 0
+  )
 
   const [level, setLevel] = useState("beginner")
   const [extraLinks, setExtraLinks] = useState("")
@@ -64,7 +72,8 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
     level,
     eventDate,
     extraLinks,
-    maxParticipants
+    maxParticipants,
+    communityId
   )
 
   useEffect(() => {
@@ -84,7 +93,6 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
   } = usePostMutations(post)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-
     e.preventDefault()
 
     if (!title.trim()) return
@@ -103,6 +111,7 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
       media,
       category,
       type,
+      communityId: communityId ?? post?.communityId ?? undefined,
     }
 
     try {
@@ -126,7 +135,7 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
 
           case "education":
             updateEducationMutation.mutate({
-              id: post.id ,
+              id: post.id,
               ...commonData,
               difficulty: level,
               externalLink: extraLinks,
@@ -163,9 +172,9 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
   }
 
   return (
-    <div className="flex w-120 h-[90vh] flex-col">
+    <div className="flex h-[90vh] w-120 flex-col">
       <div className="border-b bg-gray-50 px-6 py-5">
-        <h2 className="text-2xl text-center font-bold text-gray-900">
+        <h2 className="text-center text-2xl font-bold text-gray-900">
           {post ? "✏️ Update Post" : "✨ Create Post"}
         </h2>
 
@@ -201,7 +210,7 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
           />
         </div>
 
-        <div className="space-y-2 max-w-fit">
+        <div className="max-w-fit space-y-2">
           <Label className="font-medium text-gray-700">Type</Label>
           <Select
             value={type}
@@ -238,7 +247,7 @@ const PostForm = ({ post, onOpenChange, PostType }: PostFormProps) => {
           />
         )}
 
-        <div className="space-y-2 max-w-fit">
+        <div className="max-w-fit space-y-2">
           <Label className="font-medium text-gray-700">🏷️ Category</Label>
 
           <Select
