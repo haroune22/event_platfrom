@@ -53,7 +53,7 @@ const Comments = ({ postId }: CommentsProps) => {
   }
 
   return (
-    <div className="flex w-full max-w-xl flex-col gap-4">
+    <div className="flex w-full max-w-2xl flex-col gap-4">
       {comments.map((c: commentData) => (
         <div
           key={c.id}

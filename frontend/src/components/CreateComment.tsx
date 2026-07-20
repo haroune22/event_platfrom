@@ -37,7 +37,7 @@ const CreateComment = ({ postId }: CreateCommentProps) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="my-2 flex w-full max-w-xl">
+    <form onSubmit={handleSubmit} className="my-2 flex w-full max-w-2xl">
       <Input
         value={text}
         className="h-12 flex-1 rounded-l-2xl rounded-r-none border border-gray-200 bg-gray-100 px-4 py-2 focus-visible:ring-1"

@@ -27,19 +27,16 @@ const Community = () => {
   if (error) {
     return <div>Error fetching community</div>
   }
+  
   return (
       <div className="space-y-8">
-
             <CommunityHeader
                 community={data.community}
                 role={data.currentUserRole}
                 membersCount={data.membersCount}
             />
-
             <CommunityNavbar />
-
             <Outlet />
-
         </div>
     
   )

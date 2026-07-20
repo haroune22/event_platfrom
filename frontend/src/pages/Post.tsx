@@ -31,7 +31,7 @@ const Post = () => {
   }
 
   return (
-    <div className="mx-auto flex min-h-full max-w-2xl flex-col items-center justify-center rounded-lg border border-gray-100 bg-white shadow-sm">
+    <div className="mx-auto flex min-h-full max-w-3xl flex-col items-center justify-center rounded-lg border border-gray-100 bg-white shadow-sm">
       <PostDetailsCard setShowComments={setShowComments} post={post} />
       {showComments && (
         <>
