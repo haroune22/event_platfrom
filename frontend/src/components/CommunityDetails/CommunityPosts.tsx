@@ -64,7 +64,7 @@ const CommunityPosts = () => {
 
   return (
     <>
-      <div className="flex mx-auto max-w-3xl flex-1 flex-col gap-4">
+      <div className="flex mx-auto max-w-4xl flex-1 flex-col gap-4">
         {(currentUserRole === "member" || currentUserRole === "owner") && (
           <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition duration-200 hover:shadow-md">
             <div className="border-b border-gray-100 px-6 py-4">
@@ -82,7 +82,7 @@ const CommunityPosts = () => {
                 className="flex w-full items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-gray-600 transition duration-200 hover:bg-gray-100 hover:text-gray-700"
               >
                 <span className="text-sm font-medium">
-                  What's on your mind?
+                  What's on your mind....................
                 </span>
               </button>
 
@@ -115,7 +115,7 @@ const CommunityPosts = () => {
               </div>
             </div>
             <h3 className="mb-2 text-lg font-semibold text-gray-900">
-              No posts yet
+             This community hasn't shared anything yet.
             </h3>
             <p className="mb-6 text-gray-600">
               Be the first to share something with this community!

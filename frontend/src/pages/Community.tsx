@@ -37,6 +37,8 @@ const Community = () => {
         context={{
           community: data.community,
           currentUserRole: data.currentUserRole,
+          memberCount: data.memberCount,
+          isMember: data.isMember,
         }}
       />
     </div>
