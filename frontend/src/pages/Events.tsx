@@ -19,7 +19,7 @@ const Events = () => {
     retry: false,
   })
 
-  console.log(events)
+  // console.log(events)
 
   if (isLoading) {
     return <div className="text-center text-xl font-medium">Loading...</div>

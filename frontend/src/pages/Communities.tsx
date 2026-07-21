@@ -32,7 +32,8 @@ const Communities = () => {
     queryFn: () => fetchCommunities(name),
     placeholderData: keepPreviousData,
   })
-  console.log(userCommunities)
+  
+  // console.log(userCommunities)
 
   if (loadingUserCommunities || loadingCommunities) {
     return (

@@ -15,7 +15,7 @@ const Feed = () => {
     retry: false,
   })
 
-  console.log(data, isLoading, error)
+  // console.log(data, isLoading, error)
   if (isLoading) {
     return <div>Loading...</div>
   }

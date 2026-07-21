@@ -20,7 +20,9 @@ export const Navbar = () => {
 
   const location = useLocation()
   const navigate = useNavigate()
+
   const [searchParams] = useSearchParams()
+  
   const canFilter = ["/", "/feed", "/events"].includes(location.pathname)
 
   const queryClient = useQueryClient()

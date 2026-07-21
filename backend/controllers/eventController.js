@@ -21,25 +21,27 @@ export const CreateEvent = async (req, res) => {
   }
 
   try {
-    // remove community for now:
-    // const [community] = await db.query(
-    //     `SELECT * FROM community WHERE id = ?`,
-    //     [communityId]
-    // );
 
-    // if (community.length === 0) {
-    //     return res.status(404).json({
-    //         message: "community not found"
-    //     });
-    // }
+    if(communityId) {
+      const [community] = await db.query(
+          `SELECT * FROM community WHERE id = ?`,
+          [communityId]
+      );
+  
+      if (community.length === 0) {
+          return res.status(404).json({
+              message: "community not found"
+          });
+      }
+    }
 
     const postId = randomUUID();
 
     await db.query(
       `INSERT INTO posts
-            (id, title, content, media, type, userId, category)
-            VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [postId, title, content, media, "event", user, category],
+            (id, title, content, media, communityId, type, userId, category)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [postId, title, content, media, communityId, "event", user, category],
     );
 
     const mysqlDate = new Date(eventDate)

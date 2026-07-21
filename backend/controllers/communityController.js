@@ -267,6 +267,45 @@ export const GetCommunityPosts = async (req, res) => {
   }
 };
 
+export const GetCommunityEvents = async (req, res) => {
+  
+  const user = req.user.id;
+  const id = req.params.id;
+
+  const page = Math.max(parseInt(req.query.page) || 1, 1);
+  const limit = Math.min(Math.max(parseInt(req.query.limit) || 10, 1), 50);
+
+  const offset = (page - 1) * limit;
+
+  if(!id) {
+    return res.status(400).json({ message: "community id is required" });
+  }
+
+  try {
+    let query = `SELECT e.id AS eventId, e.eventDate, e.maxParticipants, p.*, u.name AS creatorName, u.profilePic
+        FROM posts p
+        JOIN users u ON p.userId = u.id
+        JOIN events e ON p.id = e.postId
+        WHERE p.type = ? AND p.communityId = ?
+        `;
+
+    let values = ["event", id];
+
+    query += " ORDER BY p.createdAt DESC";
+
+    query += ` LIMIT ? OFFSET ?`;
+
+    values.push(limit, offset);
+
+    const [events] = await db.query(query, values);
+
+    return res.status(200).json({ message: "events found", events });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "internal server error" });
+  }
+}
+
 export const UpdateCommunity = async (req, res) => {
   const user = req.user.id;
   const id = req.params.id;

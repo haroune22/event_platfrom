@@ -52,7 +52,7 @@ export const PostDetailsCard = ({
     enabled: !!post.communityId,
     retry: false,
   })
-  console.log(post)
+ 
 
   const handleSave = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()

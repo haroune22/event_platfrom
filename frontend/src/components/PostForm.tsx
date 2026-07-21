@@ -63,18 +63,18 @@ const PostForm = ({
 
   const displayImage = preview || post?.media || ""
 
-  console.log(
-    type,
-    title,
-    content,
-    category,
-    image,
-    level,
-    eventDate,
-    extraLinks,
-    maxParticipants,
-    communityId
-  )
+  // console.log(
+  //   type,
+  //   title,
+  //   content,
+  //   category,
+  //   image,
+  //   level,
+  //   eventDate,
+  //   extraLinks,
+  //   maxParticipants,
+  //   communityId
+  // )
 
   useEffect(() => {
     return () => {

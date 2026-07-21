@@ -1,7 +1,7 @@
 import type { CommunityCRUD } from "@/lib/types"
 import api from "./axios"
 
-export const fetchCommunityById = async (id: string) => {
+export const fetchCommunityById = async (id?: string) => {
   const res = await api.get(`/community/${id}`)
   return res.data
 }
@@ -23,6 +23,15 @@ export const fetchCommunities = async (name?:string) => {
 
 export const fetchCommunityPosts = async (id?: string, page?: number) => {
   const res = await api.get(`/community/${id}/posts`, {
+    params: {
+      page
+    }
+  })
+  return res.data
+}
+
+export const fetchCommunityEvents = async (id?: string, page?: number) => {
+  const res = await api.get(`/community/${id}/events`, {
     params: {
       page
     }

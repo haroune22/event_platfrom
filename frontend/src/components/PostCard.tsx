@@ -15,6 +15,7 @@ interface postCardProps {
 }
 
 export const PostCard = ({ post }: postCardProps) => {
+  
   const [isLiked, setIsLiked] = useState(false)
   const creatorProfilePic = post?.profilePic
 
