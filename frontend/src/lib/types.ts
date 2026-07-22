@@ -190,3 +190,8 @@ export interface CommunityCRUD {
   profilePic?: string
   role?: userRoles
 }
+
+export type CommunityContext = {
+  community: userCommunitiesType
+  currentUserRole: string | null
+}

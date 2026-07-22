@@ -1,5 +1,5 @@
 import { fetchCommunityEvents } from "@/api/community"
-import type { Post, userCommunitiesType } from "@/lib/types"
+import type { CommunityContext, Post } from "@/lib/types"
 import { useQuery } from "@tanstack/react-query"
 import { ImageIcon, Loader, Plus } from "lucide-react"
 import { useState } from "react"
@@ -9,10 +9,7 @@ import CreatePostDialog from "../CreatePostDialog"
 import HomePagination from "../HomePagination"
 import { PostCard } from "../PostCard"
 
-type CommunityContext = {
-  community: userCommunitiesType
-  currentUserRole: string | null
-}
+
 
 const CommunityEvents = () => {
   const [searchParams] = useSearchParams()
@@ -66,7 +63,7 @@ const CommunityEvents = () => {
 
   return (
     <>
-      <div className="mx-auto flex max-w-3xl flex-1 flex-col gap-4">
+      <div className="mx-auto flex max-w-4xl flex-1 flex-col gap-4">
         {(currentUserRole === "member" || currentUserRole === "owner") && (
           <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition duration-200 hover:shadow-md">
             <div className="border-b border-gray-100 px-6 py-4">

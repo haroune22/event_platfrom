@@ -268,7 +268,6 @@ export const GetCommunityPosts = async (req, res) => {
 };
 
 export const GetCommunityEvents = async (req, res) => {
-  
   const user = req.user.id;
   const id = req.params.id;
 
@@ -277,7 +276,7 @@ export const GetCommunityEvents = async (req, res) => {
 
   const offset = (page - 1) * limit;
 
-  if(!id) {
+  if (!id) {
     return res.status(400).json({ message: "community id is required" });
   }
 
@@ -304,7 +303,60 @@ export const GetCommunityEvents = async (req, res) => {
     console.log(error);
     return res.status(500).json({ message: "internal server error" });
   }
-}
+};
+
+export const GetCommunityMembers = async (req, res) => {
+  const user = req.user.id;
+  const id = req.params.id;
+
+  const page = Math.max(parseInt(req.query.page) || 1, 1);
+  const limit = Math.min(Math.max(parseInt(req.query.limit) || 10, 1), 50);
+
+  const offset = (page - 1) * limit;
+
+  if (!id) {
+    return res.status(400).json({ message: "community id is required" });
+  }
+
+  try {
+    const [community] = await db.query(
+      `SELECT c.*, u.name AS creatorName, u.profilePic
+            FROM community c
+            JOIN users u ON c.createdBy = u.id
+            WHERE c.id = ?
+            `,
+      [id],
+    );
+
+    if (community.length === 0) {
+      return res.status(400).json({ message: "no community found" });
+    }
+
+    const [members] = await db.query(
+      `SELECT cm.role, cm.userId, u.id, u.name, u.email, u.profilePic
+          FROM community_members cm
+          JOIN users u ON cm.userId = u.id
+          WHERE cm.communityId = ?
+          ORDER BY cm.joinedAt DESC
+          LIMIT ? OFFSET ?
+          `,
+      [id, limit, offset],
+    );
+
+    const currentUser = members.find((m) => m.userId === user);
+
+    const currentUserRole = currentUser?.role ?? null;
+
+    return res.status(201).json({
+      message: "Community members found successfully",
+      members: members,
+      isMember: !!currentUser,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "internal server error" });
+  }
+};
 
 export const UpdateCommunity = async (req, res) => {
   const user = req.user.id;

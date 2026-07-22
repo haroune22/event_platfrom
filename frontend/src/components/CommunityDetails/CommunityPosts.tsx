@@ -1,7 +1,7 @@
 import { useOutletContext, useSearchParams } from "react-router-dom"
 import HomePagination from "../HomePagination"
 import { PostCard } from "../PostCard"
-import type { Post, userCommunitiesType } from "@/lib/types"
+import type { CommunityContext, Post } from "@/lib/types"
 import { useQuery } from "@tanstack/react-query"
 import { fetchCommunityPosts } from "@/api/community"
 import { useState } from "react"
@@ -9,10 +9,7 @@ import CreatePostDialog from "../CreatePostDialog"
 import { Button } from "../ui/button"
 import { ImageIcon, Plus, Loader } from "lucide-react"
 
-type CommunityContext = {
-  community: userCommunitiesType
-  currentUserRole: string | null
-}
+
 
 const CommunityPosts = () => {
   const [searchParams] = useSearchParams()
