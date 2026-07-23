@@ -30,6 +30,7 @@ const Community = () => {
         community={data.community}
         role={data.currentUserRole}
         memberCount={data.memberCount}
+        currentUserRole={data.currentUserRole}
         isMember={data.isMember}
       />
       <CommunityNavbar />

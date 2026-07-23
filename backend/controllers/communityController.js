@@ -486,11 +486,11 @@ export const JoinCommunity = async (req, res) => {
 
     const [community] = await db.query(communityQuery, [id]);
 
-    if (!community || community.length === 0) {
+    if (community.length === 0) {
       return res.status(404).json({ message: "Community not found" });
     }
 
-    const memberQuery = `SELECT id 
+    const memberQuery = `SELECT *
                           FROM community_members 
                           WHERE communityId = ? AND userId = ?
                         `;
@@ -508,7 +508,7 @@ export const JoinCommunity = async (req, res) => {
 
     const [userData] = await db.query(userQuery, [userId]);
 
-    if (!userData || userData.length === 0) {
+    if (userData.length === 0) {
       return res.status(404).json({ message: "User not found" });
     }
 
@@ -553,19 +553,19 @@ export const LeaveCommunity = async (req, res) => {
                           `
     const [community] = await db.query(communityQuery, [id])
  
-    if (!community || community.length === 0) {
+    if (community.length === 0) {
       return res.status(404).json({ message: "Community not found" })
     }
  
     const communityData = community[0]
  
-    const memberQuery = `SELECT id, role 
+    const memberQuery = `SELECT *
                           FROM community_members 
                           WHERE communityId = ? AND userId = ?
                         `
     const [memberData] = await db.query(memberQuery, [id, userId])
  
-    if (!memberData || memberData.length === 0) {
+    if (memberData.length === 0) {
       return res.status(400).json({ message: "You are not a member of this community" })
     }
  
@@ -578,9 +578,9 @@ export const LeaveCommunity = async (req, res) => {
     }
 
     const deleteQuery = `DELETE FROM community_members 
-                          WHERE id = ?
+                          WHERE communityId = ? AND userId = ?
                         `
-    await db.query(deleteQuery, [member.id])
+    await db.query(deleteQuery, [id, userId])
  
     return res.status(200).json({ message: "Successfully left the community",
       community: {

@@ -20,7 +20,7 @@ router.delete('/:id', authMiddleware, DeleteCommunity)
 
 // promote & demote:
 router.post('/:id/join', authMiddleware,  JoinCommunity)
-router.post('/:id/leave', authMiddleware, LeaveCommunity)
+router.delete('/:id/leave', authMiddleware, LeaveCommunity)
 
 
 export default router

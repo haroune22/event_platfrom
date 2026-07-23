@@ -73,7 +73,7 @@ export const joinCommunity = async (communityId: string) => {
 // Leave Community
 export const leaveCommunity = async (communityId: string) => {
   try {
-    const res = await api.post(`/community/${communityId}/leave`)
+    const res = await api.delete(`/community/${communityId}/leave`)
     return res.data
   } catch (error: unknown) {
      if (error instanceof Error) {

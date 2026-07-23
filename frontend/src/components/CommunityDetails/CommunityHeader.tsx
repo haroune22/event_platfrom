@@ -1,18 +1,21 @@
-import { Settings, Users, Share2, MoreHorizontal, LogOut } from "lucide-react"
-import { Link } from "react-router-dom"
+ 
+import { Users, Share2, MoreHorizontal } from "lucide-react"
+
 import type { CommunityCRUD, userRoles } from "@/lib/types"
+import { CommunityHeaderButtons } from "./CommunityHeaderButtons"
 
 type CommunityHeaderProps = {
   community: CommunityCRUD
   role: userRoles
-  memberCount?: number
-  isMember?: boolean
+  memberCount: number
+  isMember: boolean
+  currentUserRole: userRoles
 }
 
 const CommunityHeader = ({
   community,
-  role,
   memberCount,
+  currentUserRole,
   isMember,
 }: CommunityHeaderProps) => {
   return (
@@ -29,25 +32,11 @@ const CommunityHeader = ({
         )}
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="absolute top-6 right-6 z-20 flex items-center gap-3">
-          {role === "owner" ? (
-            <Link
-              to={`/communities/${community.id}/about`}
-              className="inline-flex items-center gap-2 rounded-xl bg-white/95 px-5 py-2.5 font-semibold text-gray-800 shadow-lg backdrop-blur transition hover:bg-white"
-            >
-              <Settings size={18} />
-              Manage
-            </Link>
-          ) : isMember ? (
-            <button className="inline-flex items-center gap-2 rounded-xl bg-white/95 px-5 py-2.5 font-semibold text-gray-800 shadow-lg backdrop-blur transition hover:bg-white">
-              <LogOut size={18} />
-              Leave
-            </button>
-          ) : (
-            <button className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 font-semibold text-white shadow-lg transition hover:bg-blue-700">
-              <Users size={18} />
-              Join
-            </button>
-          )}
+          <CommunityHeaderButtons
+            communityId={community.id}
+            isMember={isMember}
+            isOwner={currentUserRole === "owner"}
+          />
 
           <button className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/95 shadow-lg backdrop-blur transition hover:bg-white">
             <Share2 size={19} className="text-gray-700" />
@@ -114,7 +103,6 @@ const CommunityHeader = ({
             </div>
           </div>
         </div>
-
       </div>
     </div>
   )
