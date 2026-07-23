@@ -57,3 +57,29 @@ export const updateCommunity = async (community: CommunityCRUD) => {
   const res = await api.put(`community/${community.id}`, community)
   return res.data
 }
+
+export const joinCommunity = async (communityId: string) => {
+  // try {
+    const res = await api.post(`/community/${communityId}/join`)
+    return res.data
+  // } catch (error: Error) {
+  //   const errorMessage =
+  //     error.res?.data?.message || "Failed to join community"
+  //     console.log(errorMessage)
+    // throw new Error(errorMessage)
+  // }
+}
+ 
+// Leave Community
+export const leaveCommunity = async (communityId: string) => {
+  try {
+    const res = await api.post(`/community/${communityId}/leave`)
+    return res.data
+  } catch (error: unknown) {
+     if (error instanceof Error) {
+    console.log(error.message); 
+  } else {
+    console.log("An unexpected error occurred:", error);
+  }
+  }
+}

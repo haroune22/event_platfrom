@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import { authMiddleware } from "../middleware/authMiddleware.js";
-import { CreateCommunity, DeleteCommunity, GetCommunities, GetCommunitiesByCat, GetCommunityById, GetCommunityEvents, GetCommunityMembers, GetCommunityPosts, GetUserCommunities, UpdateCommunity } from "../controllers/communityController.js";
+import { CreateCommunity, DeleteCommunity, GetCommunities, GetCommunitiesByCat, GetCommunityById, GetCommunityEvents, GetCommunityMembers, GetCommunityPosts, GetUserCommunities, JoinCommunity, LeaveCommunity, UpdateCommunity } from "../controllers/communityController.js";
 import { createLimiter } from "../utils/limiters.js";
 
 const router = Router()
@@ -19,8 +19,8 @@ router.put('/:id', authMiddleware, UpdateCommunity)
 router.delete('/:id', authMiddleware, DeleteCommunity)
 
 // promote & demote:
-router.post('/:id/join', authMiddleware,   () => {})
-router.post('/:id/leave', authMiddleware,   () => {})
+router.post('/:id/join', authMiddleware,  JoinCommunity)
+router.post('/:id/leave', authMiddleware, LeaveCommunity)
 
 
 export default router

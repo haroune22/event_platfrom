@@ -469,3 +469,127 @@ export const DeleteCommunity = async (req, res) => {
     return res.status(500).json({ message: "internal server error" });
   }
 };
+
+export const JoinCommunity = async (req, res) => {
+  const userId = req.user.id;
+  const id = req.params.id;
+
+  if (!id) {
+    return res.status(400).json({ message: "community id is required" });
+  }
+
+  try {
+    const communityQuery = `SELECT id, name 
+                            FROM community 
+                            WHERE id = ?
+                          `;
+
+    const [community] = await db.query(communityQuery, [id]);
+
+    if (!community || community.length === 0) {
+      return res.status(404).json({ message: "Community not found" });
+    }
+
+    const memberQuery = `SELECT id 
+                          FROM community_members 
+                          WHERE communityId = ? AND userId = ?
+                        `;
+
+    const [existingMember] = await db.query(memberQuery, [id, userId]);
+
+    if (existingMember && existingMember.length > 0) {
+      return res.status(400).json({ message: "You are already a member of this community" });
+    }
+
+    const userQuery = `SELECT id, name, email, profilePic 
+                      FROM users 
+                      WHERE id = ?
+                    `;
+
+    const [userData] = await db.query(userQuery, [userId]);
+
+    if (!userData || userData.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const insertQuery = `
+      INSERT INTO community_members (communityId, userId, role, joinedAt)
+      VALUES (?, ?, 'member', NOW())
+    `;
+
+    await db.query(insertQuery, [
+      id,
+      userId,
+    ]);
+
+    return res.status(200).json({
+      message: "Successfully joined the community",
+      community: {
+        id: community[0].id,
+        name: community[0].name,
+      },
+    });
+  } catch (error) {
+    console.error("Error joining community:", error);
+    return res.status(500).json({ message: "Failed to join community" });
+  }
+};
+
+
+export const LeaveCommunity = async (req, res) => {
+
+  const id  = req.params.id
+  const userId = req.user.id
+
+  if (!id) {
+    return res.status(400).json({ message: "Community ID is required" })
+  }
+
+  try {
+ 
+    const communityQuery = `SELECT id, name, createdBy 
+                            FROM community
+                            WHERE id = ?
+                          `
+    const [community] = await db.query(communityQuery, [id])
+ 
+    if (!community || community.length === 0) {
+      return res.status(404).json({ message: "Community not found" })
+    }
+ 
+    const communityData = community[0]
+ 
+    const memberQuery = `SELECT id, role 
+                          FROM community_members 
+                          WHERE communityId = ? AND userId = ?
+                        `
+    const [memberData] = await db.query(memberQuery, [id, userId])
+ 
+    if (!memberData || memberData.length === 0) {
+      return res.status(400).json({ message: "You are not a member of this community" })
+    }
+ 
+    const member = memberData[0]
+ 
+    if (member.role === "owner") {
+      return res.status(403).json({
+        message: "Owner cannot leave the community. Please transfer ownership or delete the community.",
+      })
+    }
+
+    const deleteQuery = `DELETE FROM community_members 
+                          WHERE id = ?
+                        `
+    await db.query(deleteQuery, [member.id])
+ 
+    return res.status(200).json({ message: "Successfully left the community",
+      community: {
+        id: communityData.id,
+        name: communityData.name,
+      },
+    })
+  } catch (error) {
+    console.error("Error leaving community:", error)
+    return res.status(500).json({ message: "Failed to leave community" })
+  }
+}
